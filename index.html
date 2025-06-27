@@ -242,17 +242,6 @@
             border-radius: 10px;
         }
 
-        .debug-info {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-            font-family: monospace;
-            font-size: 12px;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-
         @media (max-width: 768px) {
             .charts-grid {
                 grid-template-columns: 1fr;
@@ -310,18 +299,12 @@
                 <button class="btn" onclick="loadData()">Load Dashboard</button>
                 <button class="btn" onclick="startAutoRefresh()" style="background: #28a745;">Start Auto-Refresh</button>
                 <button class="btn" onclick="stopAutoRefresh()" style="background: #dc3545;">Stop</button>
-                <button class="btn" onclick="toggleDebug()" style="background: #6c757d;">Debug Info</button>
             </div>
         </div>
 
         <div class="status-bar">
             <div id="connectionStatus">Ready to connect</div>
             <div id="lastRefresh"></div>
-        </div>
-
-        <div id="debugInfo" class="debug-info" style="display: none;">
-            <h4>Debug Information:</h4>
-            <div id="debugContent">No data loaded yet</div>
         </div>
 
         <div id="dashboardContent" style="display: none;">
@@ -410,7 +393,6 @@
         let callData = [];
         let autoRefreshInterval;
         let lastRefreshTime = new Date();
-        let debugMode = false;
 
         function generateSampleData() {
             const data = [];
@@ -486,36 +468,6 @@
             // Try to parse as plain number
             const num = parseFloat(str);
             return isNaN(num) ? 0 : num;
-        }
-
-        function updateDebugInfo(data) {
-            if (!debugMode) return;
-            
-            const debugContent = document.getElementById('debugContent');
-            const sampleRecord = data && data.length > 0 ? data[0] : {};
-            
-            debugContent.innerHTML = `
-                <strong>Total Records:</strong> ${data ? data.length : 0}<br>
-                <strong>Sample Record Keys:</strong> ${Object.keys(sampleRecord).join(', ')}<br>
-                <strong>Sample Duration Value:</strong> "${sampleRecord.duration}" (Type: ${typeof sampleRecord.duration})<br>
-                <strong>Parsed Duration:</strong> ${parseDuration(sampleRecord.duration)} seconds<br>
-                <strong>Sample Employee:</strong> "${sampleRecord['Employee Name']}"<br>
-                <strong>Sample Disconnect Reason:</strong> "${sampleRecord.disconnect_reason}"<br>
-                <strong>Sample Sentiment:</strong> "${sampleRecord.caller_sentiment}"<br>
-                <strong>Sample Call Cost:</strong> "${sampleRecord.call_cost}"<br>
-                <strong>Raw Sample Record:</strong><br>
-                <pre>${JSON.stringify(sampleRecord, null, 2)}</pre>
-            `;
-        }
-
-        function toggleDebug() {
-            debugMode = !debugMode;
-            const debugDiv = document.getElementById('debugInfo');
-            debugDiv.style.display = debugMode ? 'block' : 'none';
-            
-            if (debugMode && callData.length > 0) {
-                updateDebugInfo(callData);
-            }
         }
 
         function updateStats(data) {
@@ -598,7 +550,7 @@
                 } else if (normalizedReason.includes('voicemail')) {
                     category = 'Voicemail';
                 } else {
-                    category = reason; // Use the actual reason if we can't categorize it
+                    category = reason;
                 }
                 
                 outcomes[category] = (outcomes[category] || 0) + 1;
@@ -815,3 +767,133 @@
                 } else if (reasonLower.includes('ended') || reasonLower.includes('hangup')) {
                     outcomeColor = '#28a745';
                 }
+                
+                row.innerHTML = `
+                    <td>${startTime}</td>
+                    <td>${duration}</td>
+                    <td><span style="color: ${outcomeColor}">${outcome}</span></td>
+                    <td>${sentiment}</td>
+                    <td>${employee}</td>
+                    <td>${callCost}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        async function loadData() {
+            const baserowUrl = document.getElementById('baserowUrl').value;
+            const apiToken = document.getElementById('apiToken').value;
+            
+            if (!baserowUrl && !apiToken) {
+                callData = sampleData;
+                updateDashboard(callData);
+                return;
+            }
+            
+            if (!baserowUrl || !apiToken) {
+                alert('Please provide both Baserow URL and API token, or leave both empty to use sample data.');
+                return;
+            }
+
+            try {
+                document.getElementById('loadingIndicator').innerHTML = 'Loading data from Baserow...';
+                document.getElementById('connectionStatus').innerHTML = 'Connecting...';
+                
+                const response = await fetch(baserowUrl, {
+                    headers: {
+                        'Authorization': `Token ${apiToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    mode: 'cors'
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                callData = data.results || data;
+                updateDashboard(callData);
+                
+                document.getElementById('connectionStatus').innerHTML = 
+                    '<span style="color: #28a745;">✅ Connected to live data</span>';
+                
+            } catch (error) {
+                console.error('Error loading data:', error);
+                
+                let errorMessage = 'Connection failed. ';
+                if (error.message.includes('cors') || error.message.includes('CORS')) {
+                    errorMessage += 'CORS issue detected. ';
+                } else if (error.message.includes('401')) {
+                    errorMessage += 'Check your API token. ';
+                } else if (error.message.includes('404')) {
+                    errorMessage += 'Check your API URL. ';
+                }
+                errorMessage += 'Using sample data.';
+                
+                alert(`Connection Error: ${error.message}\n\nUsing sample data for demonstration.`);
+                
+                callData = sampleData;
+                updateDashboard(callData);
+            }
+        }
+
+        function updateDashboard(data) {
+            document.getElementById('loadingIndicator').style.display = 'none';
+            document.getElementById('dashboardContent').style.display = 'block';
+            
+            updateStats(data);
+            createHourlyChart(data);
+            createOutcomeChart(data);
+            createTrendsChart(data);
+            createDurationChart(data);
+            createQualityChart(data);
+            updateTable(data);
+        }
+
+        function startAutoRefresh() {
+            const refreshRate = document.getElementById('refreshRate').value * 60000;
+            
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+            }
+            
+            autoRefreshInterval = setInterval(() => {
+                loadData();
+                lastRefreshTime = new Date();
+                updateLastRefreshDisplay();
+            }, refreshRate);
+            
+            updateLastRefreshDisplay();
+            alert(`Auto-refresh started! Dashboard will update every ${document.getElementById('refreshRate').value} minutes.`);
+        }
+
+        function updateLastRefreshDisplay() {
+            const display = document.getElementById('lastRefresh');
+            if (display) {
+                display.textContent = `Last updated: ${lastRefreshTime.toLocaleTimeString()}`;
+            }
+        }
+
+        function stopAutoRefresh() {
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+                autoRefreshInterval = null;
+                alert('Auto-refresh stopped.');
+            }
+        }
+
+        function toggleSettings() {
+            alert('🎨 Color Settings Panel\n\nFeatures:\n• Change dashboard colors\n• Customize chart themes\n• Brand color presets\n• Save preferences\n\nComing in next update! Currently using your brand colors.');
+        }
+
+        function toggleAdmin() {
+            alert('👥 Admin Panel\n\nFeatures:\n• User management\n• Database permissions\n• Team access control\n• Role assignments\n• Permission matrix\n\nComing in next update! Contact admin for user access.');
+        }
+
+        window.onload = function() {
+            loadData();
+        };
+    </script>
+</body>
+</html>
