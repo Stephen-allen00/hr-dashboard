@@ -242,6 +242,17 @@
             border-radius: 10px;
         }
 
+        .debug-info {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
         @media (max-width: 768px) {
             .charts-grid {
                 grid-template-columns: 1fr;
@@ -299,12 +310,18 @@
                 <button class="btn" onclick="loadData()">Load Dashboard</button>
                 <button class="btn" onclick="startAutoRefresh()" style="background: #28a745;">Start Auto-Refresh</button>
                 <button class="btn" onclick="stopAutoRefresh()" style="background: #dc3545;">Stop</button>
+                <button class="btn" onclick="toggleDebug()" style="background: #6c757d;">Debug Info</button>
             </div>
         </div>
 
         <div class="status-bar">
             <div id="connectionStatus">Ready to connect</div>
             <div id="lastRefresh"></div>
+        </div>
+
+        <div id="debugInfo" class="debug-info" style="display: none;">
+            <h4>Debug Information:</h4>
+            <div id="debugContent">No data loaded yet</div>
         </div>
 
         <div id="dashboardContent" style="display: none;">
@@ -374,6 +391,7 @@
                             <th>Outcome</th>
                             <th>Caller Sentiment</th>
                             <th>Employee</th>
+                            <th>Call Cost</th>
                         </tr>
                     </thead>
                     <tbody id="callsTableBody">
@@ -392,6 +410,7 @@
         let callData = [];
         let autoRefreshInterval;
         let lastRefreshTime = new Date();
+        let debugMode = false;
 
         function generateSampleData() {
             const data = [];
@@ -409,7 +428,7 @@
                     phone_number_dialed: `555-${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`,
                     'Employee Name': employees[Math.floor(Math.random() * employees.length)],
                     start_time: date.toISOString(),
-                    duration: Math.floor(Math.random() * 600) + 30,
+                    duration: `${Math.floor(Math.random() * 20)}:${Math.floor(Math.random() * 60).toString().padStart(2, '0')}`,
                     Formula: '',
                     transcript: 'Sample transcript...',
                     call_recording: 'recording_url',
@@ -427,22 +446,91 @@
         const sampleData = generateSampleData();
 
         function formatDuration(seconds) {
+            if (!seconds || isNaN(seconds)) return '0:00';
             const minutes = Math.floor(seconds / 60);
             const remainingSeconds = seconds % 60;
             return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
         }
 
+        function parseDuration(durationValue) {
+            if (!durationValue) return 0;
+            
+            // If it's already a number (seconds), return it
+            if (typeof durationValue === 'number') return durationValue;
+            
+            // If it's a string, try to parse different formats
+            const str = durationValue.toString().trim();
+            
+            // Format: "14:15" (minutes:seconds)
+            if (str.includes(':')) {
+                const parts = str.split(':');
+                if (parts.length === 2) {
+                    const minutes = parseInt(parts[0]) || 0;
+                    const seconds = parseInt(parts[1]) || 0;
+                    return (minutes * 60) + seconds;
+                }
+            }
+            
+            // Format: "150s" or "150 seconds"
+            if (str.includes('s')) {
+                const match = str.match(/(\d+)s/);
+                if (match) return parseInt(match[1]) || 0;
+            }
+            
+            // Format: "2.5m" or "2.5 minutes"
+            if (str.includes('m')) {
+                const match = str.match(/(\d+\.?\d*)m/);
+                if (match) return Math.round(parseFloat(match[1]) * 60) || 0;
+            }
+            
+            // Try to parse as plain number
+            const num = parseFloat(str);
+            return isNaN(num) ? 0 : num;
+        }
+
+        function updateDebugInfo(data) {
+            if (!debugMode) return;
+            
+            const debugContent = document.getElementById('debugContent');
+            const sampleRecord = data && data.length > 0 ? data[0] : {};
+            
+            debugContent.innerHTML = `
+                <strong>Total Records:</strong> ${data ? data.length : 0}<br>
+                <strong>Sample Record Keys:</strong> ${Object.keys(sampleRecord).join(', ')}<br>
+                <strong>Sample Duration Value:</strong> "${sampleRecord.duration}" (Type: ${typeof sampleRecord.duration})<br>
+                <strong>Parsed Duration:</strong> ${parseDuration(sampleRecord.duration)} seconds<br>
+                <strong>Sample Employee:</strong> "${sampleRecord['Employee Name']}"<br>
+                <strong>Sample Disconnect Reason:</strong> "${sampleRecord.disconnect_reason}"<br>
+                <strong>Sample Sentiment:</strong> "${sampleRecord.caller_sentiment}"<br>
+                <strong>Sample Call Cost:</strong> "${sampleRecord.call_cost}"<br>
+                <strong>Raw Sample Record:</strong><br>
+                <pre>${JSON.stringify(sampleRecord, null, 2)}</pre>
+            `;
+        }
+
+        function toggleDebug() {
+            debugMode = !debugMode;
+            const debugDiv = document.getElementById('debugInfo');
+            debugDiv.style.display = debugMode ? 'block' : 'none';
+            
+            if (debugMode && callData.length > 0) {
+                updateDebugInfo(callData);
+            }
+        }
+
         function updateStats(data) {
             const totalCalls = data.length;
-            const totalDuration = data.reduce((sum, call) => sum + (call.duration || 0), 0);
+            const totalDuration = data.reduce((sum, call) => sum + parseDuration(call.duration), 0);
             const avgDuration = totalCalls > 0 ? totalDuration / totalCalls : 0;
-            const successfulCalls = data.filter(call => 
-                call.disconnect_reason && 
-                !call.disconnect_reason.toLowerCase().includes('missed') && 
-                !call.disconnect_reason.toLowerCase().includes('no answer') &&
-                !call.disconnect_reason.toLowerCase().includes('busy') &&
-                !call.disconnect_reason.toLowerCase().includes('failed')
-            ).length;
+            const successfulCalls = data.filter(call => {
+                if (!call.disconnect_reason) return false;
+                const reason = call.disconnect_reason.toLowerCase();
+                return !reason.includes('missed') && 
+                       !reason.includes('no answer') &&
+                       !reason.includes('busy') &&
+                       !reason.includes('failed') &&
+                       !reason.includes('error');
+            }).length;
             const successRate = totalCalls > 0 ? (successfulCalls / totalCalls) * 100 : 0;
 
             document.getElementById('totalCalls').textContent = totalCalls.toLocaleString();
@@ -456,7 +544,7 @@
             data.forEach(call => {
                 if (call.start_time) {
                     const hour = new Date(call.start_time).getHours();
-                    hourlyData[hour]++;
+                    if (!isNaN(hour)) hourlyData[hour]++;
                 }
             });
 
@@ -555,11 +643,14 @@
                         dailyData[date] = { calls: 0, duration: 0, successful: 0 };
                     }
                     dailyData[date].calls++;
-                    dailyData[date].duration += call.duration || 0;
+                    dailyData[date].duration += parseDuration(call.duration);
                     
-                    const reason = (call.disconnect_reason || '').toLowerCase();
-                    if (!reason.includes('missed') && !reason.includes('no answer') && !reason.includes('busy')) {
-                        dailyData[date].successful++;
+                    if (call.disconnect_reason) {
+                        const reason = call.disconnect_reason.toLowerCase();
+                        if (!reason.includes('missed') && !reason.includes('no answer') && 
+                            !reason.includes('busy') && !reason.includes('failed')) {
+                            dailyData[date].successful++;
+                        }
                     }
                 }
             });
@@ -603,8 +694,8 @@
             const durations = { '0-1min': 0, '1-3min': 0, '3-5min': 0, '5-10min': 0, '10min+': 0 };
             
             data.forEach(call => {
-                const duration = call.duration || 0;
-                const minutes = duration / 60;
+                const durationSeconds = parseDuration(call.duration);
+                const minutes = durationSeconds / 60;
                 if (minutes <= 1) durations['0-1min']++;
                 else if (minutes <= 3) durations['1-3min']++;
                 else if (minutes <= 5) durations['3-5min']++;
@@ -706,10 +797,12 @@
             recentCalls.forEach(call => {
                 const row = document.createElement('tr');
                 const startTime = call.start_time ? new Date(call.start_time).toLocaleString() : 'N/A';
-                const duration = call.duration ? formatDuration(call.duration) : 'N/A';
+                const durationSeconds = parseDuration(call.duration);
+                const duration = durationSeconds > 0 ? formatDuration(durationSeconds) : (call.duration || 'N/A');
                 const outcome = call.disconnect_reason || 'Unknown';
                 const sentiment = call.caller_sentiment || 'N/A';
                 const employee = call['Employee Name'] || 'N/A';
+                const callCost = call.call_cost ? `$${call.call_cost}` : 'N/A';
                 
                 let outcomeColor = '#666';
                 const reasonLower = outcome.toLowerCase();
@@ -722,135 +815,3 @@
                 } else if (reasonLower.includes('ended') || reasonLower.includes('hangup')) {
                     outcomeColor = '#28a745';
                 }
-                
-                row.innerHTML = `
-                    <td>${startTime}</td>
-                    <td>${duration}</td>
-                    <td><span style="color: ${outcomeColor}">${outcome}</span></td>
-                    <td>${sentiment}</td>
-                    <td>${employee}</td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-
-        async function loadData() {
-            const baserowUrl = document.getElementById('baserowUrl').value;
-            const apiToken = document.getElementById('apiToken').value;
-            
-            if (!baserowUrl && !apiToken) {
-                callData = sampleData;
-                updateDashboard(callData);
-                return;
-            }
-            
-            if (!baserowUrl || !apiToken) {
-                alert('Please provide both Baserow URL and API token, or leave both empty to use sample data.');
-                return;
-            }
-
-            try {
-                document.getElementById('loadingIndicator').innerHTML = 'Loading data from Baserow...';
-                document.getElementById('connectionStatus').innerHTML = 'Connecting...';
-                
-                const response = await fetch(baserowUrl, {
-                    headers: {
-                        'Authorization': `Token ${apiToken}`,
-                        'Content-Type': 'application/json'
-                    },
-                    mode: 'cors'
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                callData = data.results || data;
-                updateDashboard(callData);
-                
-                document.getElementById('connectionStatus').innerHTML = 
-                    '<span style="color: #28a745;">✅ Connected to live data</span>';
-                
-            } catch (error) {
-                console.error('Error loading data:', error);
-                
-                let errorMessage = 'Connection failed. ';
-                if (error.message.includes('cors') || error.message.includes('CORS')) {
-                    errorMessage += 'CORS issue detected. ';
-                } else if (error.message.includes('401')) {
-                    errorMessage += 'Check your API token. ';
-                } else if (error.message.includes('404')) {
-                    errorMessage += 'Check your API URL. ';
-                }
-                errorMessage += 'Using sample data.';
-                
-                document.getElementById('connectionStatus').innerHTML = 
-                    `<span style="color: #dc3545;">❌ ${errorMessage}</span>`;
-                
-                alert(`Connection Error: ${error.message}\n\nUsing sample data for demonstration.`);
-                
-                callData = sampleData;
-                updateDashboard(callData);
-            }
-        }
-
-        function updateDashboard(data) {
-            document.getElementById('loadingIndicator').style.display = 'none';
-            document.getElementById('dashboardContent').style.display = 'block';
-            
-            updateStats(data);
-            createHourlyChart(data);
-            createOutcomeChart(data);
-            createTrendsChart(data);
-            createDurationChart(data);
-            createQualityChart(data);
-            updateTable(data);
-        }
-
-        function startAutoRefresh() {
-            const refreshRate = document.getElementById('refreshRate').value * 60000;
-            
-            if (autoRefreshInterval) {
-                clearInterval(autoRefreshInterval);
-            }
-            
-            autoRefreshInterval = setInterval(() => {
-                loadData();
-                lastRefreshTime = new Date();
-                updateLastRefreshDisplay();
-            }, refreshRate);
-            
-            updateLastRefreshDisplay();
-            alert(`Auto-refresh started! Dashboard will update every ${document.getElementById('refreshRate').value} minutes.`);
-        }
-
-        function updateLastRefreshDisplay() {
-            const display = document.getElementById('lastRefresh');
-            if (display) {
-                display.textContent = `Last updated: ${lastRefreshTime.toLocaleTimeString()}`;
-            }
-        }
-
-        function stopAutoRefresh() {
-            if (autoRefreshInterval) {
-                clearInterval(autoRefreshInterval);
-                autoRefreshInterval = null;
-                alert('Auto-refresh stopped.');
-            }
-        }
-
-        function toggleSettings() {
-            alert('Settings panel coming soon! Use the Load Dashboard button to connect your data.');
-        }
-
-        function toggleAdmin() {
-            alert('Admin panel coming soon! This will allow user and permission management.');
-        }
-
-        window.onload = function() {
-            loadData();
-        };
-    </script>
-</body>
-</html>
