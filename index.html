@@ -576,7 +576,126 @@
             showMessage('You have been logged out successfully', 'success');
         }
 
-        // Test connection function
+        // Generate sample data for analytics
+        function generateSampleData() {
+            const data = [];
+            const disconnectReasons = ['completed', 'missed call', 'no answer', 'busy', 'voicemail'];
+            const sentiments = ['positive', 'neutral', 'negative'];
+            const employees = ['Sarah Johnson', 'Mike Chen', 'Lisa Rodriguez'];
+            
+            for (let i = 0; i < 100; i++) {
+                const date = new Date();
+                date.setDate(date.getDate() - Math.floor(Math.random() * 30));
+                
+                data.push({
+                    id: i + 1,
+                    'Call ID': 'CALL-' + (1000 + i),
+                    phone_number_dialed: '555-' + (Math.floor(Math.random() * 900) + 100) + '-' + (Math.floor(Math.random() * 9000) + 1000),
+                    'Employee Name': employees[Math.floor(Math.random() * employees.length)],
+                    start_time: date.toISOString(),
+                    duration: Math.floor(Math.random() * 20) + ':' + Math.floor(Math.random() * 60).toString().padStart(2, '0'),
+                    disconnect_reason: disconnectReasons[Math.floor(Math.random() * disconnectReasons.length)],
+                    call_summary: 'Sample call summary with key discussion points and outcomes.',
+                    caller_sentiment: sentiments[Math.floor(Math.random() * sentiments.length)],
+                    benefit_counselor: 'AI Assistant',
+                    call_cost: (Math.random() * 2 + 0.5).toFixed(2)
+                });
+            }
+            return data;
+        }
+
+        // Load sample data function
+        function loadSampleData() {
+            console.log('Loading sample data...');
+            const sampleData = generateSampleData();
+            
+            // Update stats
+            document.querySelector('.stat-value').textContent = sampleData.length.toLocaleString();
+            
+            // Update status
+            document.getElementById('connectionStatus').innerHTML = 
+                `<span style="color: #28a745;">✅ Sample data loaded successfully (${sampleData.length} records)</span>`;
+            
+            // Update last refresh
+            document.getElementById('lastRefresh').textContent = 'Last updated: ' + new Date().toLocaleTimeString();
+            
+            alert(`✅ Sample Data Loaded!\n\nLoaded ${sampleData.length} sample call records.\nCheck the updated stats above and connection status.`);
+            
+            console.log('Sample data loaded:', sampleData);
+        }
+
+        // Load live data function
+        function loadLiveData() {
+            console.log('Loading live data...');
+            const baserowUrl = document.getElementById('baserowUrl').value.trim();
+            const apiToken = document.getElementById('apiToken').value.trim();
+            
+            if (!baserowUrl || !apiToken) {
+                alert('Please provide both Baserow URL and API token first.');
+                return;
+            }
+            
+            document.getElementById('connectionStatus').innerHTML = 'Connecting to Baserow...';
+            
+            fetch(baserowUrl, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Token ' + apiToken,
+                    'Content-Type': 'application/json'
+                },
+                mode: 'cors'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Baserow API Response:', data);
+                
+                const records = data.results || data;
+                
+                if (!Array.isArray(records) || records.length === 0) {
+                    throw new Error('No data returned from Baserow API');
+                }
+                
+                // Update stats with real data
+                document.querySelector('.stat-value').textContent = records.length.toLocaleString();
+                
+                // Update status
+                document.getElementById('connectionStatus').innerHTML = 
+                    `<span style="color: #28a745;">✅ Connected to live Baserow data (${records.length} records)</span>`;
+                
+                // Update last refresh
+                document.getElementById('lastRefresh').textContent = 'Last updated: ' + new Date().toLocaleTimeString();
+                
+                alert(`✅ Live Data Loaded!\n\nSuccessfully loaded ${records.length} records from your Baserow database.`);
+                
+                console.log('Live data loaded:', records);
+            })
+            .catch(error => {
+                console.error('Baserow connection error:', error);
+                
+                let errorMessage = 'Connection failed: ';
+                if (error.message.includes('cors') || error.message.includes('CORS')) {
+                    errorMessage += 'CORS policy blocked the request. ';
+                } else if (error.message.includes('401')) {
+                    errorMessage += 'Invalid API token. ';
+                } else if (error.message.includes('404')) {
+                    errorMessage += 'Invalid API URL. ';
+                } else if (error.message.includes('403')) {
+                    errorMessage += 'Access forbidden - check permissions. ';
+                } else {
+                    errorMessage += error.message + '. ';
+                }
+                
+                document.getElementById('connectionStatus').innerHTML = 
+                    `<span style="color: #dc3545;">❌ ${errorMessage}</span>`;
+                
+                alert(`❌ Connection Error: ${error.message}\n\nPlease check your Baserow URL and API token.`);
+            });
+        }
         function testConnection() {
             const baserowUrl = document.getElementById('baserowUrl').value.trim();
             const apiToken = document.getElementById('apiToken').value.trim();
@@ -627,8 +746,11 @@
             document.getElementById('logoutBtn').addEventListener('click', doLogout);
             
             // Dashboard button event listeners
+            document.getElementById('loadDataBtn').addEventListener('click', loadLiveData);
+            document.getElementById('loadSampleBtn').addEventListener('click', loadSampleData);
             document.getElementById('testConnBtn').addEventListener('click', testConnection);
             
+            console.log('All event listeners added successfully');
             console.log('Available users:', Object.keys(users));
             console.log('System ready!');
         });
