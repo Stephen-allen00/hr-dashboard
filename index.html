@@ -870,7 +870,7 @@
             
             <div id="loginMessage"></div>
             
-            <form id="loginForm">
+            <form id="loginForm" onsubmit="return login(event)">
                 <div class="form-group">
                     <label for="loginEmail">Email Address</label>
                     <input type="email" id="loginEmail" required placeholder="Enter your email" value="admin@company.com">
@@ -881,6 +881,9 @@
                 </div>
                 <button type="submit" class="login-btn" id="loginBtn">
                     Sign In
+                </button>
+                <button type="button" class="login-btn" onclick="login()" style="background: #28a745; margin-top: 10px;">
+                    Quick Login (Admin)
                 </button>
             </form>
             
@@ -1354,15 +1357,21 @@
 
         // Authentication Functions
         function login(event) {
-            event.preventDefault();
+            if (event) {
+                event.preventDefault();
+            }
+            
+            console.log('Login function called');
             
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
             const loginBtn = document.getElementById('loginBtn');
             
+            console.log('Login attempt with:', email, password);
+            
             if (!email || !password) {
                 showMessage('Please enter both email and password.', 'error');
-                return;
+                return false;
             }
             
             loginBtn.disabled = true;
@@ -1373,6 +1382,7 @@
                 const user = authenticateUser(email, password);
                 
                 if (user) {
+                    console.log('Authentication successful for user:', user);
                     currentUser = user;
                     user.lastLogin = new Date().toISOString();
                     saveUsers();
@@ -1387,12 +1397,15 @@
                     
                     showMessage('Login successful!', 'success');
                 } else {
-                    showMessage('Invalid email or password. Try admin@company.com / admin123', 'error');
+                    console.log('Authentication failed');
+                    showMessage('Invalid email or password. Please check your credentials.', 'error');
                 }
                 
                 loginBtn.disabled = false;
                 loginBtn.textContent = 'Sign In';
-            }, 1000);
+            }, 500);
+            
+            return false;
         }
 
         function authenticateUser(email, password) {
@@ -2511,12 +2524,29 @@
         }
 
         // Event Listeners
-        document.getElementById('loginForm').addEventListener('submit', login);
-
-        // Initialize system on page load
-        window.onload = function() {
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing system...');
             initializeSystem();
             checkExistingSession();
+            
+            // Add form event listener
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    login(e);
+                });
+                console.log('Login form event listener added');
+            }
+        });
+
+        // Initialize system on page load (backup)
+        window.onload = function() {
+            console.log('Window loaded');
+            if (!currentUser) {
+                initializeSystem();
+                checkExistingSession();
+            }
         };
                     responsive: true,
                     maintainAspectRatio: false,
