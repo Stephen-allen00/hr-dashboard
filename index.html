@@ -873,16 +873,24 @@
             <form id="loginForm">
                 <div class="form-group">
                     <label for="loginEmail">Email Address</label>
-                    <input type="email" id="loginEmail" required placeholder="Enter your email">
+                    <input type="email" id="loginEmail" required placeholder="Enter your email" value="admin@company.com">
                 </div>
                 <div class="form-group">
                     <label for="loginPassword">Password</label>
-                    <input type="password" id="loginPassword" required placeholder="Enter your password">
+                    <input type="password" id="loginPassword" required placeholder="Enter your password" value="admin123">
                 </div>
                 <button type="submit" class="login-btn" id="loginBtn">
                     Sign In
                 </button>
             </form>
+            
+            <div style="margin-top: 20px; padding: 15px; background: #e3f2fd; border-radius: 8px; font-size: 14px;">
+                <strong>Demo Accounts:</strong><br>
+                Admin: admin@company.com / admin123<br>
+                Manager: manager@company.com / manager123<br>
+                Analyst: analyst@company.com / analyst123<br>
+                Viewer: viewer@company.com / viewer123
+            </div>
             
             <a href="#" class="forgot-password" onclick="resetPassword()">Forgot your password?</a>
         </div>
@@ -1270,26 +1278,78 @@
                 users = JSON.parse(sessionStorage.getItem('hr_dashboard_users') || '[]');
                 databases = JSON.parse(sessionStorage.getItem('hr_dashboard_databases') || '[]');
                 permissions = JSON.parse(sessionStorage.getItem('hr_dashboard_permissions') || '{}');
-                
-                // Create default admin if no users exist
-                if (users.length === 0) {
-                    const defaultAdmin = {
-                        id: 1,
-                        name: 'System Administrator',
-                        email: 'admin@company.com',
-                        password: 'admin123', // In production, this should be hashed
-                        role: 'admin',
-                        department: 'IT',
-                        created: new Date().toISOString(),
-                        active: true,
-                        lastLogin: null
-                    };
-                    users.push(defaultAdmin);
-                    sessionStorage.setItem('hr_dashboard_users', JSON.stringify(users));
-                }
             } catch (e) {
-                console.log('Initializing fresh system');
+                console.log('Error parsing stored data, resetting...');
+                users = [];
+                databases = [];
+                permissions = {};
             }
+            
+            // Always ensure default admin exists
+            const adminExists = users.find(u => u.email === 'admin@company.com');
+            if (!adminExists) {
+                const defaultAdmin = {
+                    id: 1,
+                    name: 'System Administrator',
+                    email: 'admin@company.com',
+                    password: 'admin123', // In production, this should be hashed
+                    role: 'admin',
+                    department: 'IT',
+                    created: new Date().toISOString(),
+                    active: true,
+                    lastLogin: null
+                };
+                users.push(defaultAdmin);
+                sessionStorage.setItem('hr_dashboard_users', JSON.stringify(users));
+                console.log('Default admin created:', defaultAdmin);
+            }
+            
+            // Add some demo users for testing
+            const demoUsers = [
+                {
+                    id: 2,
+                    name: 'John Manager',
+                    email: 'manager@company.com',
+                    password: 'manager123',
+                    role: 'manager',
+                    department: 'HR',
+                    created: new Date().toISOString(),
+                    active: true,
+                    lastLogin: null
+                },
+                {
+                    id: 3,
+                    name: 'Jane Analyst',
+                    email: 'analyst@company.com',
+                    password: 'analyst123',
+                    role: 'analyst',
+                    department: 'Operations',
+                    created: new Date().toISOString(),
+                    active: true,
+                    lastLogin: null
+                },
+                {
+                    id: 4,
+                    name: 'Bob Viewer',
+                    email: 'viewer@company.com',
+                    password: 'viewer123',
+                    role: 'viewer',
+                    department: 'HR',
+                    created: new Date().toISOString(),
+                    active: true,
+                    lastLogin: null
+                }
+            ];
+            
+            demoUsers.forEach(demoUser => {
+                const exists = users.find(u => u.email === demoUser.email);
+                if (!exists) {
+                    users.push(demoUser);
+                }
+            });
+            
+            sessionStorage.setItem('hr_dashboard_users', JSON.stringify(users));
+            console.log('All users:', users);
         }
 
         // Authentication Functions
@@ -1336,11 +1396,17 @@
         }
 
         function authenticateUser(email, password) {
-            const user = users.find(u => 
-                u.email.toLowerCase() === email.toLowerCase() && 
-                u.password === password && 
-                u.active
-            );
+            console.log('Attempting to authenticate:', email, password);
+            console.log('Available users:', users);
+            
+            const user = users.find(u => {
+                console.log('Checking user:', u.email, u.password, u.active);
+                return u.email.toLowerCase().trim() === email.toLowerCase().trim() && 
+                       u.password === password && 
+                       u.active;
+            });
+            
+            console.log('Authentication result:', user);
             return user || null;
         }
 
