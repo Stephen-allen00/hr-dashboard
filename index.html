@@ -337,7 +337,73 @@
             font-weight: bold;
         }
 
-        .status-bar {
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .chart-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #231F20;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+        }
+
+        .data-table {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+            margin-top: 30px;
+        }
+
+        .data-table table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1000px;
+        }
+
+        .data-table th {
+            background: linear-gradient(45deg, #C00000, #182B49);
+            color: white;
+            padding: 15px 8px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .data-table td {
+            padding: 12px 8px;
+            border-bottom: 1px solid #eee;
+            font-size: 13px;
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .data-table tr:hover {
+            background-color: #f8f9fa;
+        }
             text-align: center;
             margin-bottom: 20px;
             padding: 10px;
@@ -470,6 +536,47 @@
                     <li>Modify system settings</li>
                     <li>Export data</li>
                 </ul>
+            </div>
+        </div>
+
+        <!-- Data Visualization Section -->
+        <div id="dataVisualization" style="display: none;">
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <div class="chart-title">Call Outcomes</div>
+                    <div class="chart-wrapper">
+                        <canvas id="outcomeChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-title">Call Volume by Hour</div>
+                    <div class="chart-wrapper">
+                        <canvas id="hourlyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="data-table">
+                <div class="chart-title">Recent Call Details</div>
+                <table id="callsTable">
+                    <thead>
+                        <tr>
+                            <th>Call ID</th>
+                            <th>Phone Number</th>
+                            <th>Employee</th>
+                            <th>Date/Time</th>
+                            <th>Duration</th>
+                            <th>Outcome</th>
+                            <th>Sentiment</th>
+                            <th>Counselor</th>
+                            <th>Cost</th>
+                            <th>Summary</th>
+                        </tr>
+                    </thead>
+                    <tbody id="callsTableBody">
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -609,8 +716,16 @@
             console.log('Loading sample data...');
             const sampleData = generateSampleData();
             
+            // Show the data visualization section
+            document.getElementById('dataVisualization').style.display = 'block';
+            
             // Update stats
-            document.querySelector('.stat-value').textContent = sampleData.length.toLocaleString();
+            updateStats(sampleData);
+            
+            // Create visualizations
+            createOutcomeChart(sampleData);
+            createHourlyChart(sampleData);
+            updateTable(sampleData);
             
             // Update status
             document.getElementById('connectionStatus').innerHTML = 
@@ -619,9 +734,154 @@
             // Update last refresh
             document.getElementById('lastRefresh').textContent = 'Last updated: ' + new Date().toLocaleTimeString();
             
-            alert(`✅ Sample Data Loaded!\n\nLoaded ${sampleData.length} sample call records.\nCheck the updated stats above and connection status.`);
+            alert(`✅ Sample Data Loaded!\n\nLoaded ${sampleData.length} sample call records.\nScroll down to see charts and call details table.`);
             
             console.log('Sample data loaded:', sampleData);
+        }
+
+        // Update stats function
+        function updateStats(data) {
+            const statValues = document.querySelectorAll('.stat-value');
+            const statLabels = document.querySelectorAll('.stat-label');
+            
+            if (statValues.length >= 4) {
+                // Total calls
+                statValues[0].textContent = data.length.toLocaleString();
+                
+                // Average duration
+                const totalDuration = data.reduce((sum, call) => {
+                    const duration = parseDuration(call.duration);
+                    return sum + duration;
+                }, 0);
+                const avgDuration = data.length > 0 ? totalDuration / data.length : 0;
+                statValues[1].textContent = formatDuration(Math.round(avgDuration));
+                
+                // Success rate
+                const successfulCalls = data.filter(call => {
+                    return call.disconnect_reason && call.disconnect_reason.toLowerCase().includes('completed');
+                }).length;
+                const successRate = data.length > 0 ? (successfulCalls / data.length) * 100 : 0;
+                statValues[2].textContent = successRate.toFixed(1) + '%';
+                
+                // Total minutes
+                statValues[3].textContent = Math.round(totalDuration / 60).toLocaleString();
+            }
+        }
+
+        // Parse duration helper
+        function parseDuration(durationValue) {
+            if (!durationValue) return 0;
+            if (typeof durationValue === 'number') return durationValue;
+            
+            const str = durationValue.toString().trim();
+            if (str.includes(':')) {
+                const parts = str.split(':');
+                if (parts.length === 2) {
+                    const minutes = parseInt(parts[0]) || 0;
+                    const seconds = parseInt(parts[1]) || 0;
+                    return (minutes * 60) + seconds;
+                }
+            }
+            return 0;
+        }
+
+        // Format duration helper
+        function formatDuration(seconds) {
+            if (!seconds || isNaN(seconds)) return '0:00';
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            return minutes + ':' + remainingSeconds.toString().padStart(2, '0');
+        }
+
+        // Create outcome chart
+        function createOutcomeChart(data) {
+            const outcomes = {};
+            data.forEach(call => {
+                const reason = call.disconnect_reason || 'Unknown';
+                outcomes[reason] = (outcomes[reason] || 0) + 1;
+            });
+
+            const ctx = document.getElementById('outcomeChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(outcomes),
+                    datasets: [{
+                        data: Object.values(outcomes),
+                        backgroundColor: ['#C00000', '#182B49', '#74D444', '#FFC000', '#FF3131']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+        }
+
+        // Create hourly chart
+        function createHourlyChart(data) {
+            const hourlyData = new Array(24).fill(0);
+            data.forEach(call => {
+                if (call.start_time) {
+                    const hour = new Date(call.start_time).getHours();
+                    if (!isNaN(hour)) hourlyData[hour]++;
+                }
+            });
+
+            const ctx = document.getElementById('hourlyChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Array.from({length: 24}, (_, i) => i + ':00'),
+                    datasets: [{
+                        label: 'Calls per Hour',
+                        data: hourlyData,
+                        backgroundColor: '#C00000',
+                        borderColor: '#C00000',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        }
+
+        // Update table
+        function updateTable(data) {
+            const tbody = document.getElementById('callsTableBody');
+            tbody.innerHTML = '';
+            
+            // Show last 20 records
+            const recentCalls = data.slice(-20).reverse();
+            
+            recentCalls.forEach(call => {
+                const row = document.createElement('tr');
+                
+                const startTime = call.start_time ? new Date(call.start_time).toLocaleString() : 'N/A';
+                const summary = call.call_summary && call.call_summary.length > 50 ? 
+                    call.call_summary.substring(0, 50) + '...' : call.call_summary || 'N/A';
+                
+                row.innerHTML = `
+                    <td>${call['Call ID'] || call.id}</td>
+                    <td><a href="tel:${call.phone_number_dialed}" style="color: #007bff; text-decoration: none;">${call.phone_number_dialed}</a></td>
+                    <td>${call['Employee Name']}</td>
+                    <td>${startTime}</td>
+                    <td>${call.duration}</td>
+                    <td><span style="color: ${call.disconnect_reason && call.disconnect_reason.includes('completed') ? '#28a745' : '#dc3545'}; font-weight: 600;">${call.disconnect_reason}</span></td>
+                    <td><span style="color: ${call.caller_sentiment === 'positive' ? '#28a745' : call.caller_sentiment === 'negative' ? '#dc3545' : '#6c757d'}; font-weight: 600;">${call.caller_sentiment}</span></td>
+                    <td>${call.benefit_counselor}</td>
+                    <td style="text-align: right; font-weight: 600;">${call.call_cost}</td>
+                    <td title="${call.call_summary || 'N/A'}">${summary}</td>
+                `;
+                tbody.appendChild(row);
+            });
         }
 
         // Load live data function
@@ -660,8 +920,16 @@
                     throw new Error('No data returned from Baserow API');
                 }
                 
+                // Show the data visualization section
+                document.getElementById('dataVisualization').style.display = 'block';
+                
                 // Update stats with real data
-                document.querySelector('.stat-value').textContent = records.length.toLocaleString();
+                updateStats(records);
+                
+                // Create visualizations with real data
+                createOutcomeChart(records);
+                createHourlyChart(records);
+                updateTable(records);
                 
                 // Update status
                 document.getElementById('connectionStatus').innerHTML = 
@@ -670,7 +938,7 @@
                 // Update last refresh
                 document.getElementById('lastRefresh').textContent = 'Last updated: ' + new Date().toLocaleTimeString();
                 
-                alert(`✅ Live Data Loaded!\n\nSuccessfully loaded ${records.length} records from your Baserow database.`);
+                alert(`✅ Live Data Loaded!\n\nSuccessfully loaded ${records.length} records from your Baserow database.\nScroll down to see charts and call details table.`);
                 
                 console.log('Live data loaded:', records);
             })
