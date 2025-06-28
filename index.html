@@ -19,10 +19,284 @@
             color: #333;
         }
 
+        /* Login Page Styles */
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #182B49 0%, #C00000 100%);
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .login-logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #231F20;
+            margin-bottom: 10px;
+        }
+
+        .login-logo .hr-text {
+            color: #C00000;
+        }
+
+        .login-subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e6ed;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #C00000;
+            box-shadow: 0 0 0 3px rgba(192, 0, 0, 0.1);
+        }
+
+        .login-btn {
+            width: 100%;
+            background: linear-gradient(45deg, #C00000, #182B49);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-bottom: 20px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(192, 0, 0, 0.4);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .forgot-password {
+            color: #C00000;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+        }
+
+        /* User Profile Menu */
+        .user-menu {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+        }
+
+        .user-profile {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50px;
+            padding: 10px 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+
+        .user-profile:hover {
+            background: rgba(255, 255, 255, 1);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #C00000, #182B49);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            min-width: 200px;
+            overflow: hidden;
+            transform: translateY(10px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .user-dropdown.show {
+            transform: translateY(0);
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .dropdown-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dropdown-item:hover {
+            background: #f8f9fa;
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .logout-item {
+            color: #dc3545;
+            border-top: 1px solid #eee;
+        }
+
+        /* Role-based UI hiding */
+        .role-admin-only {
+            display: block;
+        }
+
+        .role-manager-only {
+            display: block;
+        }
+
+        .role-analyst-only {
+            display: block;
+        }
+
+        .role-viewer-only {
+            display: block;
+        }
+
+        body.user-viewer .role-admin-only,
+        body.user-viewer .role-manager-only,
+        body.user-viewer .role-analyst-only {
+            display: none !important;
+        }
+
+        body.user-analyst .role-admin-only,
+        body.user-analyst .role-manager-only {
+            display: none !important;
+        }
+
+        body.user-manager .role-admin-only {
+            display: none !important;
+        }
+
+        /* Session timeout warning */
+        .session-warning {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            z-index: 2000;
+            text-align: center;
+            display: none;
+        }
+
+        .session-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1999;
+            display: none;
+        }
+
+        /* Dashboard styles (existing styles remain the same) */
         .dashboard {
             max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
+            padding-left: 80px; /* Make room for user menu */
         }
 
         .header {
@@ -235,11 +509,7 @@
             background-color: #f8f9fa;
         }
 
-        .expandable-cell {
-            cursor: pointer;
-            position: relative;
-        }
-
+        /* Admin Panel Styles (keeping existing) */
         .admin-panel {
             position: fixed;
             top: 0;
@@ -302,19 +572,19 @@
             gap: 15px;
         }
 
-        .form-group {
+        .user-form .form-group {
             display: flex;
             flex-direction: column;
             gap: 5px;
         }
 
-        .form-group label {
+        .user-form .form-group label {
             font-weight: 600;
             color: #555;
             font-size: 14px;
         }
 
-        .form-group input, .form-group select {
+        .user-form .form-group input, .user-form .form-group select {
             padding: 10px 12px;
             border: 2px solid #ddd;
             border-radius: 6px;
@@ -322,7 +592,7 @@
             transition: border-color 0.3s;
         }
 
-        .form-group input:focus, .form-group select:focus {
+        .user-form .form-group input:focus, .user-form .form-group select:focus {
             outline: none;
             border-color: #C00000;
         }
@@ -368,11 +638,11 @@
             border-bottom: none;
         }
 
-        .user-info {
+        .user-info-item {
             flex: 1;
         }
 
-        .user-name {
+        .user-name-item {
             font-weight: 600;
             color: #231F20;
             margin-bottom: 3px;
@@ -383,7 +653,7 @@
             color: #666;
         }
 
-        .user-role {
+        .user-role-badge {
             font-size: 11px;
             padding: 2px 8px;
             border-radius: 12px;
@@ -577,303 +847,413 @@
             .header h1 {
                 font-size: 2rem;
             }
+
+            .dashboard {
+                padding-left: 20px;
+            }
+
+            .user-menu {
+                position: relative;
+                margin-bottom: 20px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="dashboard">
-        <button class="settings-toggle" onclick="toggleSettings()">⚙️</button>
-        <button class="admin-toggle" onclick="toggleAdmin()">👥</button>
-
-        <div class="header">
-            <h1>The <span class="hr-text">HR</span> Solutions Team</h1>
-            <p>Powered by AI - Call Analytics Dashboard</p>
-        </div>
-
-        <div class="controls">
-            <div class="control-group">
-                <label for="baserowUrl">Baserow API URL:</label>
-                <input type="text" id="baserowUrl" placeholder="https://baserow.thehrsolutionsteam.com/api/database/tables/123/rows/" />
+    <!-- Login Page -->
+    <div id="loginPage" class="login-container">
+        <div class="login-card">
+            <div class="login-logo">
+                The <span class="hr-text">HR</span> Solutions Team
             </div>
-            <div class="control-group">
-                <label for="apiToken">API Token:</label>
-                <input type="password" id="apiToken" placeholder="Your Baserow API token" />
-            </div>
-            <div class="control-group">
-                <label for="dateRange">Date Range:</label>
-                <select id="dateRange">
-                    <option value="7">Last 7 days</option>
-                    <option value="30">Last 30 days</option>
-                    <option value="90">Last 90 days</option>
-                    <option value="365">Last year</option>
-                </select>
-            </div>
-            <div class="control-group">
-                <label for="refreshRate">Auto-refresh (minutes):</label>
-                <select id="refreshRate">
-                    <option value="5">Every 5 minutes</option>
-                    <option value="15">Every 15 minutes</option>
-                    <option value="30">Every 30 minutes</option>
-                    <option value="60" selected>Every hour</option>
-                </select>
-            </div>
-            <div class="control-group">
-                <button class="btn" onclick="loadData()">Load Dashboard</button>
-                <button class="btn" onclick="startAutoRefresh()" style="background: #28a745;">Start Auto-Refresh</button>
-                <button class="btn" onclick="stopAutoRefresh()" style="background: #dc3545;">Stop</button>
-            </div>
-        </div>
-
-        <div class="status-bar">
-            <div id="connectionStatus">Ready to connect</div>
-            <div id="lastRefresh"></div>
-        </div>
-
-        <div id="dashboardContent" style="display: none;">
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-value" id="totalCalls">0</div>
-                    <div class="stat-label">Total Calls</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="avgDuration">0:00</div>
-                    <div class="stat-label">Avg Duration</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="successRate">0%</div>
-                    <div class="stat-label">Success Rate</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="totalMinutes">0</div>
-                    <div class="stat-label">Total Minutes</div>
-                </div>
-            </div>
-
-            <div class="charts-grid">
-                <div class="chart-container">
-                    <div class="chart-title">Call Volume by Hour</div>
-                    <div class="chart-wrapper">
-                        <canvas id="hourlyChart"></canvas>
-                    </div>
-                </div>
-                
-                <div class="chart-container">
-                    <div class="chart-title">Call Outcomes</div>
-                    <div class="chart-wrapper">
-                        <canvas id="outcomeChart"></canvas>
-                    </div>
-                </div>
-                
-                <div class="chart-container large-chart">
-                    <div class="chart-title">Daily Call Trends</div>
-                    <div class="chart-wrapper">
-                        <canvas id="trendsChart"></canvas>
-                    </div>
-                </div>
-                
-                <div class="chart-container">
-                    <div class="chart-title">Duration Distribution</div>
-                    <div class="chart-wrapper">
-                        <canvas id="durationChart"></canvas>
-                    </div>
-                </div>
-                
-                <div class="chart-container">
-                    <div class="chart-title">Caller Sentiment Analysis</div>
-                    <div class="chart-wrapper">
-                        <canvas id="qualityChart"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <div class="data-table">
-                <div class="chart-title">Recent Call Details</div>
-                <table id="callsTable">
-                    <thead>
-                        <tr>
-                            <th>Call ID</th>
-                            <th>Phone Number</th>
-                            <th>Employee</th>
-                            <th>Date/Time</th>
-                            <th>Duration</th>
-                            <th>Outcome</th>
-                            <th>Sentiment</th>
-                            <th>Counselor</th>
-                            <th>Cost</th>
-                            <th>Summary</th>
-                        </tr>
-                    </thead>
-                    <tbody id="callsTableBody">
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div id="loadingIndicator" class="loading">
-            Configure your Baserow connection above and click "Load Dashboard" to begin
-        </div>
-
-        <!-- Admin Panel -->
-        <div id="adminPanel" class="admin-panel">
-            <div class="admin-header">
-                <div class="admin-title">Admin Panel</div>
-                <button class="close-admin" onclick="toggleAdmin()">&times;</button>
-            </div>
+            <p class="login-subtitle">Call Analytics Dashboard</p>
             
-            <div class="tabs">
-                <div class="tab active" onclick="switchTab('users')">Users</div>
-                <div class="tab" onclick="switchTab('databases')">Databases</div>
-                <div class="tab" onclick="switchTab('permissions')">Permissions</div>
-            </div>
+            <div id="loginMessage"></div>
             
-            <div id="usersTab" class="tab-content active">
-                <div class="admin-section">
-                    <h3>Add New User</h3>
-                    <form class="user-form" onsubmit="addUser(event)">
-                        <div class="form-group">
-                            <label for="userName">Full Name</label>
-                            <input type="text" id="userName" required placeholder="John Doe">
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" required placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required placeholder="Enter your password">
+                </div>
+                <button type="submit" class="login-btn" id="loginBtn">
+                    Sign In
+                </button>
+            </form>
+            
+            <a href="#" class="forgot-password" onclick="resetPassword()">Forgot your password?</a>
+        </div>
+    </div>
+
+    <!-- Dashboard Page -->
+    <div id="dashboardPage" style="display: none;">
+        <!-- User Menu -->
+        <div class="user-menu">
+            <div class="user-profile" onclick="toggleUserMenu()">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <div class="user-info">
+                    <div class="user-name" id="currentUserName">User Name</div>
+                    <div class="user-role" id="currentUserRole">Role</div>
+                </div>
+                <span>▼</span>
+            </div>
+            <div class="user-dropdown" id="userDropdown">
+                <div class="dropdown-item" onclick="showProfile()">
+                    <span>👤</span> My Profile
+                </div>
+                <div class="dropdown-item" onclick="showAccountSettings()">
+                    <span>⚙️</span> Account Settings
+                </div>
+                <div class="dropdown-item" onclick="showActivityLog()">
+                    <span>📊</span> Activity Log
+                </div>
+                <div class="dropdown-item logout-item" onclick="logout()">
+                    <span>🚪</span> Sign Out
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard">
+            <button class="settings-toggle role-admin-only role-manager-only" onclick="toggleSettings()">⚙️</button>
+            <button class="admin-toggle role-admin-only" onclick="toggleAdmin()">👥</button>
+
+            <div class="header">
+                <h1>The <span class="hr-text">HR</span> Solutions Team</h1>
+                <p>Powered by AI - Call Analytics Dashboard</p>
+            </div>
+
+            <div class="controls">
+                <div class="control-group role-admin-only role-manager-only">
+                    <label for="baserowUrl">Baserow API URL:</label>
+                    <input type="text" id="baserowUrl" placeholder="https://baserow.thehrsolutionsteam.com/api/database/tables/123/rows/" />
+                </div>
+                <div class="control-group role-admin-only role-manager-only">
+                    <label for="apiToken">API Token:</label>
+                    <input type="password" id="apiToken" placeholder="Your Baserow API token" />
+                </div>
+                <div class="control-group">
+                    <label for="dateRange">Date Range:</label>
+                    <select id="dateRange">
+                        <option value="7">Last 7 days</option>
+                        <option value="30">Last 30 days</option>
+                        <option value="90">Last 90 days</option>
+                        <option value="365">Last year</option>
+                    </select>
+                </div>
+                <div class="control-group role-admin-only role-manager-only">
+                    <label for="refreshRate">Auto-refresh (minutes):</label>
+                    <select id="refreshRate">
+                        <option value="5">Every 5 minutes</option>
+                        <option value="15">Every 15 minutes</option>
+                        <option value="30">Every 30 minutes</option>
+                        <option value="60" selected>Every hour</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <button class="btn" onclick="loadData()">Load Dashboard</button>
+                    <button class="btn role-admin-only role-manager-only" onclick="startAutoRefresh()" style="background: #28a745;">Start Auto-Refresh</button>
+                    <button class="btn role-admin-only role-manager-only" onclick="stopAutoRefresh()" style="background: #dc3545;">Stop</button>
+                </div>
+            </div>
+
+            <div class="status-bar">
+                <div id="connectionStatus">Ready to connect</div>
+                <div id="lastRefresh"></div>
+            </div>
+
+            <div id="dashboardContent" style="display: none;">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalCalls">0</div>
+                        <div class="stat-label">Total Calls</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="avgDuration">0:00</div>
+                        <div class="stat-label">Avg Duration</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="successRate">0%</div>
+                        <div class="stat-label">Success Rate</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalMinutes">0</div>
+                        <div class="stat-label">Total Minutes</div>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <div class="chart-title">Call Volume by Hour</div>
+                        <div class="chart-wrapper">
+                            <canvas id="hourlyChart"></canvas>
                         </div>
-                        <div class="form-group">
-                            <label for="userEmail">Email</label>
-                            <input type="email" id="userEmail" required placeholder="john@company.com">
+                    </div>
+                    
+                    <div class="chart-container">
+                        <div class="chart-title">Call Outcomes</div>
+                        <div class="chart-wrapper">
+                            <canvas id="outcomeChart"></canvas>
                         </div>
+                    </div>
+                    
+                    <div class="chart-container large-chart">
+                        <div class="chart-title">Daily Call Trends</div>
+                        <div class="chart-wrapper">
+                            <canvas id="trendsChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <div class="chart-title">Duration Distribution</div>
+                        <div class="chart-wrapper">
+                            <canvas id="durationChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <div class="chart-title">Caller Sentiment Analysis</div>
+                        <div class="chart-wrapper">
+                            <canvas id="qualityChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="data-table">
+                    <div class="chart-title">Recent Call Details</div>
+                    <table id="callsTable">
+                        <thead>
+                            <tr>
+                                <th>Call ID</th>
+                                <th>Phone Number</th>
+                                <th>Employee</th>
+                                <th>Date/Time</th>
+                                <th>Duration</th>
+                                <th>Outcome</th>
+                                <th>Sentiment</th>
+                                <th>Counselor</th>
+                                <th>Cost</th>
+                                <th>Summary</th>
+                            </tr>
+                        </thead>
+                        <tbody id="callsTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="loadingIndicator" class="loading">
+                Configure your Baserow connection above and click "Load Dashboard" to begin
+            </div>
+
+            <!-- Admin Panel -->
+            <div id="adminPanel" class="admin-panel">
+                <div class="admin-header">
+                    <div class="admin-title">Admin Panel</div>
+                    <button class="close-admin" onclick="toggleAdmin()">&times;</button>
+                </div>
+                
+                <div class="tabs">
+                    <div class="tab active" onclick="switchTab('users')">Users</div>
+                    <div class="tab" onclick="switchTab('databases')">Databases</div>
+                    <div class="tab" onclick="switchTab('permissions')">Permissions</div>
+                </div>
+                
+                <div id="usersTab" class="tab-content active">
+                    <div class="admin-section">
+                        <h3>Add New User</h3>
+                        <form class="user-form" onsubmit="addUser(event)">
+                            <div class="form-group">
+                                <label for="userName">Full Name</label>
+                                <input type="text" id="userName" required placeholder="John Doe">
+                            </div>
+                            <div class="form-group">
+                                <label for="userEmail">Email</label>
+                                <input type="email" id="userEmail" required placeholder="john@company.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="userPassword">Password</label>
+                                <input type="password" id="userPassword" required placeholder="Temporary password">
+                            </div>
+                            <div class="form-group">
+                                <label for="userRole">Role</label>
+                                <select id="userRole" required>
+                                    <option value="">Select Role</option>
+                                    <option value="admin">Administrator</option>
+                                    <option value="manager">Manager</option>
+                                    <option value="analyst">Analyst</option>
+                                    <option value="viewer">Viewer</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="userDepartment">Department</label>
+                                <select id="userDepartment">
+                                    <option value="">Select Department</option>
+                                    <option value="hr">Human Resources</option>
+                                    <option value="operations">Operations</option>
+                                    <option value="management">Management</option>
+                                    <option value="it">IT Support</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn-save">Add User</button>
+                        </form>
+                    </div>
+                    
+                    <div class="admin-section">
+                        <h3>Current Users</h3>
+                        <div class="user-list" id="userList">
+                            <!-- Users will be populated here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="databasesTab" class="tab-content">
+                    <div class="admin-section">
+                        <h3>Add Database Connection</h3>
+                        <form class="user-form" onsubmit="addDatabase(event)">
+                            <div class="form-group">
+                                <label for="dbName">Database Name</label>
+                                <input type="text" id="dbName" required placeholder="Call Analytics DB">
+                            </div>
+                            <div class="form-group">
+                                <label for="dbUrl">API URL</label>
+                                <input type="url" id="dbUrl" required placeholder="https://baserow.thehrsolutionsteam.com/api/database/tables/123/rows/">
+                            </div>
+                            <div class="form-group">
+                                <label for="dbToken">API Token</label>
+                                <input type="password" id="dbToken" required placeholder="Database access token">
+                            </div>
+                            <div class="form-group">
+                                <label for="dbType">Database Type</label>
+                                <select id="dbType">
+                                    <option value="baserow">Baserow</option>
+                                    <option value="airtable">Airtable</option>
+                                    <option value="postgres">PostgreSQL</option>
+                                    <option value="mysql">MySQL</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn-save">Add Database</button>
+                        </form>
+                    </div>
+                    
+                    <div class="admin-section">
+                        <h3>Connected Databases</h3>
+                        <div class="database-list" id="databaseList">
+                            <!-- Databases will be populated here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="permissionsTab" class="tab-content">
+                    <div class="admin-section">
+                        <h3>User Permissions</h3>
                         <div class="form-group">
-                            <label for="userRole">Role</label>
-                            <select id="userRole" required>
-                                <option value="">Select Role</option>
-                                <option value="admin">Administrator</option>
-                                <option value="manager">Manager</option>
-                                <option value="analyst">Analyst</option>
-                                <option value="viewer">Viewer</option>
+                            <label for="permissionUser">Select User</label>
+                            <select id="permissionUser">
+                                <option value="">Choose user...</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="userDepartment">Department</label>
-                            <select id="userDepartment">
-                                <option value="">Select Department</option>
-                                <option value="hr">Human Resources</option>
-                                <option value="operations">Operations</option>
-                                <option value="management">Management</option>
-                                <option value="it">IT Support</option>
+                            <label for="permissionDatabase">Select Database</label>
+                            <select id="permissionDatabase">
+                                <option value="">Choose database...</option>
                             </select>
                         </div>
-                        <button type="submit" class="btn-save">Add User</button>
-                    </form>
-                </div>
-                
-                <div class="admin-section">
-                    <h3>Current Users</h3>
-                    <div class="user-list" id="userList">
-                        <!-- Users will be populated here -->
+                        <div class="permissions-grid">
+                            <div class="permission-item">
+                                <input type="checkbox" id="permRead" value="read">
+                                <label for="permRead">Read Access</label>
+                            </div>
+                            <div class="permission-item">
+                                <input type="checkbox" id="permWrite" value="write">
+                                <label for="permWrite">Write Access</label>
+                            </div>
+                            <div class="permission-item">
+                                <input type="checkbox" id="permDelete" value="delete">
+                                <label for="permDelete">Delete Access</label>
+                            </div>
+                            <div class="permission-item">
+                                <input type="checkbox" id="permExport" value="export">
+                                <label for="permExport">Export Data</label>
+                            </div>
+                            <div class="permission-item">
+                                <input type="checkbox" id="permDashboard" value="dashboard">
+                                <label for="permDashboard">View Dashboard</label>
+                            </div>
+                            <div class="permission-item">
+                                <input type="checkbox" id="permSettings" value="settings">
+                                <label for="permSettings">Modify Settings</label>
+                            </div>
+                        </div>
+                        <button onclick="savePermissions()" class="btn-save">Save Permissions</button>
+                    </div>
+                    
+                    <div class="admin-section">
+                        <h3>Permission Matrix</h3>
+                        <div id="permissionMatrix">
+                            <!-- Permission matrix will be populated here -->
+                        </div>
                     </div>
                 </div>
             </div>
-            
-            <div id="databasesTab" class="tab-content">
-                <div class="admin-section">
-                    <h3>Add Database Connection</h3>
-                    <form class="user-form" onsubmit="addDatabase(event)">
-                        <div class="form-group">
-                            <label for="dbName">Database Name</label>
-                            <input type="text" id="dbName" required placeholder="Call Analytics DB">
-                        </div>
-                        <div class="form-group">
-                            <label for="dbUrl">API URL</label>
-                            <input type="url" id="dbUrl" required placeholder="https://baserow.thehrsolutionsteam.com/api/database/tables/123/rows/">
-                        </div>
-                        <div class="form-group">
-                            <label for="dbToken">API Token</label>
-                            <input type="password" id="dbToken" required placeholder="Database access token">
-                        </div>
-                        <div class="form-group">
-                            <label for="dbType">Database Type</label>
-                            <select id="dbType">
-                                <option value="baserow">Baserow</option>
-                                <option value="airtable">Airtable</option>
-                                <option value="postgres">PostgreSQL</option>
-                                <option value="mysql">MySQL</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn-save">Add Database</button>
-                    </form>
+
+            <!-- Settings Panel -->
+            <div id="settingsPanel" class="settings-panel">
+                <div class="settings-header">
+                    <div class="settings-title">Settings</div>
+                    <button class="close-settings" onclick="toggleSettings()">&times;</button>
                 </div>
-                
                 <div class="admin-section">
-                    <h3>Connected Databases</h3>
-                    <div class="database-list" id="databaseList">
-                        <!-- Databases will be populated here -->
-                    </div>
-                </div>
-            </div>
-            
-            <div id="permissionsTab" class="tab-content">
-                <div class="admin-section">
-                    <h3>User Permissions</h3>
+                    <h3>Dashboard Settings</h3>
                     <div class="form-group">
-                        <label for="permissionUser">Select User</label>
-                        <select id="permissionUser">
-                            <option value="">Choose user...</option>
+                        <label for="sessionTimeout">Session Timeout (minutes)</label>
+                        <select id="sessionTimeout" onchange="updateSessionTimeout()">
+                            <option value="15">15 minutes</option>
+                            <option value="30" selected>30 minutes</option>
+                            <option value="60">1 hour</option>
+                            <option value="120">2 hours</option>
+                            <option value="480">8 hours</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="permissionDatabase">Select Database</label>
-                        <select id="permissionDatabase">
-                            <option value="">Choose database...</option>
+                        <label for="autoLogout">Enable Auto-logout</label>
+                        <input type="checkbox" id="autoLogout" checked onchange="toggleAutoLogout()">
+                    </div>
+                    <div class="form-group">
+                        <label for="passwordPolicy">Password Policy</label>
+                        <select id="passwordPolicy">
+                            <option value="basic">Basic (6+ characters)</option>
+                            <option value="medium" selected>Medium (8+ chars, mixed case)</option>
+                            <option value="strong">Strong (12+ chars, special chars)</option>
                         </select>
                     </div>
-                    <div class="permissions-grid">
-                        <div class="permission-item">
-                            <input type="checkbox" id="permRead" value="read">
-                            <label for="permRead">Read Access</label>
-                        </div>
-                        <div class="permission-item">
-                            <input type="checkbox" id="permWrite" value="write">
-                            <label for="permWrite">Write Access</label>
-                        </div>
-                        <div class="permission-item">
-                            <input type="checkbox" id="permDelete" value="delete">
-                            <label for="permDelete">Delete Access</label>
-                        </div>
-                        <div class="permission-item">
-                            <input type="checkbox" id="permExport" value="export">
-                            <label for="permExport">Export Data</label>
-                        </div>
-                        <div class="permission-item">
-                            <input type="checkbox" id="permDashboard" value="dashboard">
-                            <label for="permDashboard">View Dashboard</label>
-                        </div>
-                        <div class="permission-item">
-                            <input type="checkbox" id="permSettings" value="settings">
-                            <label for="permSettings">Modify Settings</label>
-                        </div>
-                    </div>
-                    <button onclick="savePermissions()" class="btn-save">Save Permissions</button>
+                    <button onclick="saveSettings()" class="btn-save">Save Settings</button>
                 </div>
-                
-                <div class="admin-section">
-                    <h3>Permission Matrix</h3>
-                    <div id="permissionMatrix">
-                        <!-- Permission matrix will be populated here -->
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Settings Panel -->
-        <div id="settingsPanel" class="settings-panel">
-            <div class="settings-header">
-                <div class="settings-title">Settings</div>
-                <button class="close-settings" onclick="toggleSettings()">&times;</button>
-            </div>
-            <div class="admin-section">
-                <h3>Dashboard Settings</h3>
-                <p>Settings panel functionality coming soon!</p>
             </div>
         </div>
     </div>
 
+    <!-- Session Warning Modal -->
+    <div class="session-overlay" id="sessionOverlay"></div>
+    <div class="session-warning" id="sessionWarning">
+        <h3>Session Expiring Soon</h3>
+        <p>Your session will expire in <span id="sessionCountdown">5:00</span></p>
+        <button class="btn" onclick="extendSession()">Extend Session</button>
+        <button class="btn" onclick="logout()" style="background: #dc3545;">Logout</button>
+    </div>
+
     <script>
+        // Authentication System Variables
+        let currentUser = null;
+        let sessionTimeout = 30 * 60 * 1000; // 30 minutes in milliseconds
+        let sessionTimer = null;
+        let warningTimer = null;
+        let lastActivity = Date.now();
+        let autoLogoutEnabled = true;
+
+        // Dashboard Variables
         let charts = {};
         let callData = [];
         let autoRefreshInterval;
@@ -884,15 +1264,311 @@
         let databases = [];
         let permissions = {};
 
-        // Load from localStorage if available
-        try {
-            users = JSON.parse(localStorage.getItem('hr_dashboard_users') || '[]');
-            databases = JSON.parse(localStorage.getItem('hr_dashboard_databases') || '[]');
-            permissions = JSON.parse(localStorage.getItem('hr_dashboard_permissions') || '{}');
-        } catch (e) {
-            console.log('No existing data found, starting fresh');
+        // Initialize default admin user
+        function initializeSystem() {
+            try {
+                users = JSON.parse(sessionStorage.getItem('hr_dashboard_users') || '[]');
+                databases = JSON.parse(sessionStorage.getItem('hr_dashboard_databases') || '[]');
+                permissions = JSON.parse(sessionStorage.getItem('hr_dashboard_permissions') || '{}');
+                
+                // Create default admin if no users exist
+                if (users.length === 0) {
+                    const defaultAdmin = {
+                        id: 1,
+                        name: 'System Administrator',
+                        email: 'admin@company.com',
+                        password: 'admin123', // In production, this should be hashed
+                        role: 'admin',
+                        department: 'IT',
+                        created: new Date().toISOString(),
+                        active: true,
+                        lastLogin: null
+                    };
+                    users.push(defaultAdmin);
+                    sessionStorage.setItem('hr_dashboard_users', JSON.stringify(users));
+                }
+            } catch (e) {
+                console.log('Initializing fresh system');
+            }
         }
 
+        // Authentication Functions
+        function login(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const loginBtn = document.getElementById('loginBtn');
+            
+            if (!email || !password) {
+                showMessage('Please enter both email and password.', 'error');
+                return;
+            }
+            
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Signing In...';
+            
+            // Simulate authentication delay
+            setTimeout(() => {
+                const user = authenticateUser(email, password);
+                
+                if (user) {
+                    currentUser = user;
+                    user.lastLogin = new Date().toISOString();
+                    saveUsers();
+                    
+                    // Store session
+                    sessionStorage.setItem('currentUser', JSON.stringify(user));
+                    sessionStorage.setItem('loginTime', Date.now().toString());
+                    
+                    showDashboard();
+                    startSessionTimer();
+                    trackActivity();
+                    
+                    showMessage('Login successful!', 'success');
+                } else {
+                    showMessage('Invalid email or password. Try admin@company.com / admin123', 'error');
+                }
+                
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Sign In';
+            }, 1000);
+        }
+
+        function authenticateUser(email, password) {
+            const user = users.find(u => 
+                u.email.toLowerCase() === email.toLowerCase() && 
+                u.password === password && 
+                u.active
+            );
+            return user || null;
+        }
+
+        function showDashboard() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('dashboardPage').style.display = 'block';
+            
+            // Update user interface
+            updateUserInterface();
+            
+            // Apply role-based restrictions
+            applyRoleRestrictions();
+            
+            // Load dashboard data
+            loadData();
+        }
+
+        function updateUserInterface() {
+            if (!currentUser) return;
+            
+            document.getElementById('currentUserName').textContent = currentUser.name;
+            document.getElementById('currentUserRole').textContent = currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1);
+            document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
+        }
+
+        function applyRoleRestrictions() {
+            if (!currentUser) return;
+            
+            // Remove existing role classes
+            document.body.classList.remove('user-admin', 'user-manager', 'user-analyst', 'user-viewer');
+            
+            // Add current role class
+            document.body.classList.add('user-' + currentUser.role);
+            
+            // Hide admin toggle for non-admins
+            if (currentUser.role !== 'admin') {
+                const adminToggle = document.querySelector('.admin-toggle');
+                if (adminToggle) adminToggle.style.display = 'none';
+            }
+        }
+
+        function logout() {
+            // Clear session data
+            sessionStorage.removeItem('currentUser');
+            sessionStorage.removeItem('loginTime');
+            currentUser = null;
+            
+            // Stop timers
+            if (sessionTimer) clearTimeout(sessionTimer);
+            if (warningTimer) clearTimeout(warningTimer);
+            
+            // Hide session warning
+            hideSessionWarning();
+            
+            // Show login page
+            document.getElementById('dashboardPage').style.display = 'none';
+            document.getElementById('loginPage').style.display = 'block';
+            
+            // Clear form
+            document.getElementById('loginForm').reset();
+            
+            showMessage('You have been logged out successfully.', 'success');
+        }
+
+        // Session Management
+        function startSessionTimer() {
+            if (!autoLogoutEnabled) return;
+            
+            if (sessionTimer) clearTimeout(sessionTimer);
+            if (warningTimer) clearTimeout(warningTimer);
+            
+            // Show warning 5 minutes before timeout
+            warningTimer = setTimeout(() => {
+                showSessionWarning();
+            }, sessionTimeout - 5 * 60 * 1000);
+            
+            // Auto logout
+            sessionTimer = setTimeout(() => {
+                logout();
+                showMessage('Session expired due to inactivity.', 'error');
+            }, sessionTimeout);
+        }
+
+        function extendSession() {
+            lastActivity = Date.now();
+            hideSessionWarning();
+            startSessionTimer();
+        }
+
+        function showSessionWarning() {
+            document.getElementById('sessionOverlay').style.display = 'block';
+            document.getElementById('sessionWarning').style.display = 'block';
+            
+            let countdown = 300; // 5 minutes
+            const countdownElement = document.getElementById('sessionCountdown');
+            
+            const countdownInterval = setInterval(() => {
+                const minutes = Math.floor(countdown / 60);
+                const seconds = countdown % 60;
+                countdownElement.textContent = minutes + ':' + seconds.toString().padStart(2, '0');
+                
+                countdown--;
+                
+                if (countdown < 0) {
+                    clearInterval(countdownInterval);
+                    logout();
+                }
+            }, 1000);
+        }
+
+        function hideSessionWarning() {
+            document.getElementById('sessionOverlay').style.display = 'none';
+            document.getElementById('sessionWarning').style.display = 'none';
+        }
+
+        function trackActivity() {
+            const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
+            
+            events.forEach(event => {
+                document.addEventListener(event, () => {
+                    if (Date.now() - lastActivity > 60000) { // Reset timer if inactive for 1+ minute
+                        lastActivity = Date.now();
+                        if (currentUser && autoLogoutEnabled) {
+                            startSessionTimer();
+                        }
+                    }
+                }, true);
+            });
+        }
+
+        // User Menu Functions
+        function toggleUserMenu() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('show');
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function closeDropdown(e) {
+                if (!e.target.closest('.user-menu')) {
+                    dropdown.classList.remove('show');
+                    document.removeEventListener('click', closeDropdown);
+                }
+            });
+        }
+
+        function showProfile() {
+            alert('Profile management coming soon!');
+        }
+
+        function showAccountSettings() {
+            alert('Account settings coming soon!');
+        }
+
+        function showActivityLog() {
+            alert('Activity log coming soon!');
+        }
+
+        // Settings Functions
+        function updateSessionTimeout() {
+            const minutes = parseInt(document.getElementById('sessionTimeout').value);
+            sessionTimeout = minutes * 60 * 1000;
+            if (currentUser) {
+                startSessionTimer();
+            }
+        }
+
+        function toggleAutoLogout() {
+            autoLogoutEnabled = document.getElementById('autoLogout').checked;
+            if (autoLogoutEnabled && currentUser) {
+                startSessionTimer();
+            } else {
+                if (sessionTimer) clearTimeout(sessionTimer);
+                if (warningTimer) clearTimeout(warningTimer);
+            }
+        }
+
+        function saveSettings() {
+            alert('Settings saved successfully!');
+        }
+
+        function resetPassword() {
+            const email = prompt('Enter your email address:');
+            if (email) {
+                const user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+                if (user) {
+                    alert('Password reset instructions have been sent to ' + email);
+                } else {
+                    alert('Email address not found.');
+                }
+            }
+        }
+
+        // Utility Functions
+        function showMessage(message, type) {
+            const messageDiv = document.getElementById('loginMessage');
+            messageDiv.innerHTML = '<div class="' + (type === 'error' ? 'error' : 'success') + '-message">' + message + '</div>';
+            
+            setTimeout(() => {
+                messageDiv.innerHTML = '';
+            }, 5000);
+        }
+
+        function saveUsers() {
+            sessionStorage.setItem('hr_dashboard_users', JSON.stringify(users));
+        }
+
+        // Check for existing session on page load
+        function checkExistingSession() {
+            const storedUser = sessionStorage.getItem('currentUser');
+            const loginTime = sessionStorage.getItem('loginTime');
+            
+            if (storedUser && loginTime) {
+                const sessionAge = Date.now() - parseInt(loginTime);
+                
+                if (sessionAge < sessionTimeout) {
+                    currentUser = JSON.parse(storedUser);
+                    showDashboard();
+                    startSessionTimer();
+                    trackActivity();
+                } else {
+                    // Session expired
+                    sessionStorage.removeItem('currentUser');
+                    sessionStorage.removeItem('loginTime');
+                    showMessage('Session expired. Please login again.', 'error');
+                }
+            }
+        }
+
+        // Generate sample data function (keeping the original)
         function generateSampleData() {
             const data = [];
             const disconnectReasons = ['completed', 'missed call', 'no answer', 'busy', 'voicemail'];
@@ -926,6 +1602,7 @@
 
         const sampleData = generateSampleData();
 
+        // All the dashboard functions (keeping original functionality)
         function formatDuration(seconds) {
             if (!seconds || isNaN(seconds)) return '0:00';
             const minutes = Math.floor(seconds / 60);
@@ -1008,129 +1685,6 @@
                         backgroundColor: '#C00000',
                         borderColor: '#C00000',
                         borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        }
-
-        function createOutcomeChart(data) {
-            const outcomes = {};
-            data.forEach(function(call) {
-                const reason = call.disconnect_reason || 'Unknown';
-                const normalizedReason = reason.toLowerCase();
-                
-                let category;
-                if (normalizedReason.includes('completed') || normalizedReason.includes('success') || 
-                    normalizedReason.includes('answered') || normalizedReason.includes('ended')) {
-                    category = 'Completed';
-                } else if (normalizedReason.includes('missed') || normalizedReason.includes('no answer') || 
-                           normalizedReason.includes('failed')) {
-                    category = 'No Answer/Failed';
-                } else if (normalizedReason.includes('busy')) {
-                    category = 'Busy';
-                } else if (normalizedReason.includes('voicemail')) {
-                    category = 'Voicemail';
-                } else {
-                    category = reason;
-                }
-                
-                outcomes[category] = (outcomes[category] || 0) + 1;
-            });
-
-            const ctx = document.getElementById('outcomeChart').getContext('2d');
-            if (charts.outcome) charts.outcome.destroy();
-            
-            charts.outcome = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: Object.keys(outcomes),
-                    datasets: [{
-                        data: Object.values(outcomes),
-                        backgroundColor: [
-                            '#C00000',
-                            '#182B49',
-                            '#74D444',
-                            '#FFC000',
-                            '#FF3131'
-                        ]
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
-                        }
-                    }
-                }
-            });
-        }
-
-        function createTrendsChart(data) {
-            const dailyData = {};
-            data.forEach(function(call) {
-                if (call.start_time) {
-                    const date = new Date(call.start_time).toDateString();
-                    if (!dailyData[date]) {
-                        dailyData[date] = { calls: 0, duration: 0, successful: 0 };
-                    }
-                    dailyData[date].calls++;
-                    dailyData[date].duration += parseDuration(call.duration);
-                    
-                    if (call.disconnect_reason) {
-                        const reason = call.disconnect_reason.toLowerCase();
-                        if (!reason.includes('missed') && !reason.includes('no answer') && 
-                            !reason.includes('busy') && !reason.includes('failed')) {
-                            dailyData[date].successful++;
-                        }
-                    }
-                }
-            });
-
-            const sortedDates = Object.keys(dailyData).sort(function(a, b) {
-                return new Date(a) - new Date(b);
-            });
-            
-            const ctx = document.getElementById('trendsChart').getContext('2d');
-            if (charts.trends) charts.trends.destroy();
-            
-            charts.trends = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: sortedDates.map(function(date) {
-                        return new Date(date).toLocaleDateString();
-                    }),
-                    datasets: [{
-                        label: 'Total Calls',
-                        data: sortedDates.map(function(date) {
-                            return dailyData[date].calls;
-                        }),
-                        borderColor: '#C00000',
-                        backgroundColor: 'rgba(192, 0, 0, 0.1)',
-                        tension: 0.4
-                    }, {
-                        label: 'Successful Calls',
-                        data: sortedDates.map(function(date) {
-                            return dailyData[date].successful;
-                        }),
-                        borderColor: '#182B49',
-                        backgroundColor: 'rgba(24, 43, 73, 0.1)',
-                        tension: 0.4
                     }]
                 },
                 options: {
@@ -1261,7 +1815,130 @@
                 const outcome = call.disconnect_reason || 'Unknown';
                 const sentiment = call.caller_sentiment || 'N/A';
                 const counselor = call.benefit_counselor || 'N/A';
-                const callCost = call.call_cost ? '$' + call.call_cost : 'N/A';
+                const callCost = call.call_cost ? '
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function createOutcomeChart(data) {
+            const outcomes = {};
+            data.forEach(function(call) {
+                const reason = call.disconnect_reason || 'Unknown';
+                const normalizedReason = reason.toLowerCase();
+                
+                let category;
+                if (normalizedReason.includes('completed') || normalizedReason.includes('success') || 
+                    normalizedReason.includes('answered') || normalizedReason.includes('ended')) {
+                    category = 'Completed';
+                } else if (normalizedReason.includes('missed') || normalizedReason.includes('no answer') || 
+                           normalizedReason.includes('failed')) {
+                    category = 'No Answer/Failed';
+                } else if (normalizedReason.includes('busy')) {
+                    category = 'Busy';
+                } else if (normalizedReason.includes('voicemail')) {
+                    category = 'Voicemail';
+                } else {
+                    category = reason;
+                }
+                
+                outcomes[category] = (outcomes[category] || 0) + 1;
+            });
+
+            const ctx = document.getElementById('outcomeChart').getContext('2d');
+            if (charts.outcome) charts.outcome.destroy();
+            
+            charts.outcome = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(outcomes),
+                    datasets: [{
+                        data: Object.values(outcomes),
+                        backgroundColor: [
+                            '#C00000',
+                            '#182B49',
+                            '#74D444',
+                            '#FFC000',
+                            '#FF3131'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        function createTrendsChart(data) {
+            const dailyData = {};
+            data.forEach(function(call) {
+                if (call.start_time) {
+                    const date = new Date(call.start_time).toDateString();
+                    if (!dailyData[date]) {
+                        dailyData[date] = { calls: 0, duration: 0, successful: 0 };
+                    }
+                    dailyData[date].calls++;
+                    dailyData[date].duration += parseDuration(call.duration);
+                    
+                    if (call.disconnect_reason) {
+                        const reason = call.disconnect_reason.toLowerCase();
+                        if (!reason.includes('missed') && !reason.includes('no answer') && 
+                            !reason.includes('busy') && !reason.includes('failed')) {
+                            dailyData[date].successful++;
+                        }
+                    }
+                }
+            });
+
+            const sortedDates = Object.keys(dailyData).sort(function(a, b) {
+                return new Date(a) - new Date(b);
+            });
+            
+            const ctx = document.getElementById('trendsChart').getContext('2d');
+            if (charts.trends) charts.trends.destroy();
+            
+            charts.trends = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: sortedDates.map(function(date) {
+                        return new Date(date).toLocaleDateString();
+                    }),
+                    datasets: [{
+                        label: 'Total Calls',
+                        data: sortedDates.map(function(date) {
+                            return dailyData[date].calls;
+                        }),
+                        borderColor: '#C00000',
+                        backgroundColor: 'rgba(192, 0, 0, 0.1)',
+                        tension: 0.4
+                    }, {
+                        label: 'Successful Calls',
+                        data: sortedDates.map(function(date) {
+                            return dailyData[date].successful;
+                        }),
+                        borderColor: '#182B49',
+                        backgroundColor: 'rgba(24, 43, 73, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: { + call.call_cost : 'N/A';
                 const summary = call.call_summary ? 
                     (call.call_summary.length > 50 ? call.call_summary.substring(0, 50) + '...' : call.call_summary) : 'N/A';
                 
@@ -1303,6 +1980,12 @@
         }
 
         async function loadData() {
+            // Check user permissions
+            if (!currentUser) {
+                showMessage('Please login to access dashboard data.', 'error');
+                return;
+            }
+
             const baserowUrl = document.getElementById('baserowUrl').value;
             const apiToken = document.getElementById('apiToken').value;
             
@@ -1377,6 +2060,12 @@
         }
 
         function startAutoRefresh() {
+            // Check permissions
+            if (currentUser.role === 'viewer') {
+                alert('You do not have permission to start auto-refresh.');
+                return;
+            }
+
             const refreshRate = document.getElementById('refreshRate').value * 60000;
             
             if (autoRefreshInterval) {
@@ -1409,11 +2098,23 @@
         }
 
         function toggleSettings() {
+            // Check permissions
+            if (currentUser.role === 'viewer' || currentUser.role === 'analyst') {
+                alert('You do not have permission to access settings.');
+                return;
+            }
+
             const panel = document.getElementById('settingsPanel');
             panel.classList.toggle('open');
         }
 
         function toggleAdmin() {
+            // Check permissions
+            if (currentUser.role !== 'admin') {
+                alert('You do not have permission to access the admin panel.');
+                return;
+            }
+
             const panel = document.getElementById('adminPanel');
             panel.classList.toggle('open');
             if (panel.classList.contains('open')) {
@@ -1445,10 +2146,12 @@
                 id: Date.now(),
                 name: document.getElementById('userName').value,
                 email: document.getElementById('userEmail').value,
+                password: document.getElementById('userPassword').value, // In production, hash this
                 role: document.getElementById('userRole').value,
                 department: document.getElementById('userDepartment').value,
                 created: new Date().toISOString(),
-                active: true
+                active: true,
+                lastLogin: null
             };
             
             // Check if email already exists
@@ -1461,7 +2164,7 @@
             }
             
             users.push(user);
-            localStorage.setItem('hr_dashboard_users', JSON.stringify(users));
+            saveUsers();
             
             // Reset form
             event.target.reset();
@@ -1487,7 +2190,7 @@
             };
             
             databases.push(database);
-            localStorage.setItem('hr_dashboard_databases', JSON.stringify(databases));
+            sessionStorage.setItem('hr_dashboard_databases', JSON.stringify(databases));
             
             // Reset form
             event.target.reset();
@@ -1506,12 +2209,12 @@
             users.forEach(function(user) {
                 const userDiv = document.createElement('div');
                 userDiv.className = 'user-item';
-                userDiv.innerHTML = '<div class="user-info">' +
-                    '<div class="user-name">' +
+                userDiv.innerHTML = '<div class="user-info-item">' +
+                    '<div class="user-name-item">' +
                     '<span class="status-indicator ' + (user.active ? 'status-active' : 'status-inactive') + '"></span>' +
                     user.name + '</div>' +
                     '<div class="user-email">' + user.email + '</div>' +
-                    '<div class="user-role">' + user.role + ' - ' + (user.department || 'No Department') + '</div>' +
+                    '<div class="user-role-badge">' + user.role + ' - ' + (user.department || 'No Department') + '</div>' +
                     '</div>' +
                     '<div class="user-actions">' +
                     '<button class="btn-small btn-edit" onclick="editUser(' + user.id + ')">Edit</button>' +
@@ -1592,7 +2295,7 @@
                 updated: new Date().toISOString()
             };
             
-            localStorage.setItem('hr_dashboard_permissions', JSON.stringify(permissions));
+            sessionStorage.setItem('hr_dashboard_permissions', JSON.stringify(permissions));
             loadPermissionMatrix();
             
             alert('Permissions saved successfully!');
@@ -1641,7 +2344,7 @@
                 users = users.filter(function(u) {
                     return u.id !== userId;
                 });
-                localStorage.setItem('hr_dashboard_users', JSON.stringify(users));
+                saveUsers();
                 
                 // Remove user permissions
                 Object.keys(permissions).forEach(function(key) {
@@ -1649,7 +2352,7 @@
                         delete permissions[key];
                     }
                 });
-                localStorage.setItem('hr_dashboard_permissions', JSON.stringify(permissions));
+                sessionStorage.setItem('hr_dashboard_permissions', JSON.stringify(permissions));
                 
                 loadUserList();
                 loadPermissionSelects();
@@ -1662,7 +2365,7 @@
                 databases = databases.filter(function(db) {
                     return db.id !== dbId;
                 });
-                localStorage.setItem('hr_dashboard_databases', JSON.stringify(databases));
+                sessionStorage.setItem('hr_dashboard_databases', JSON.stringify(databases));
                 
                 // Remove database permissions
                 Object.keys(permissions).forEach(function(key) {
@@ -1670,7 +2373,7 @@
                         delete permissions[key];
                     }
                 });
-                localStorage.setItem('hr_dashboard_permissions', JSON.stringify(permissions));
+                sessionStorage.setItem('hr_dashboard_permissions', JSON.stringify(permissions));
                 
                 loadDatabaseList();
                 loadPermissionSelects();
@@ -1684,7 +2387,7 @@
             });
             if (user) {
                 user.active = !user.active;
-                localStorage.setItem('hr_dashboard_users', JSON.stringify(users));
+                saveUsers();
                 loadUserList();
                 loadPermissionSelects();
             }
@@ -1697,6 +2400,7 @@
             if (user) {
                 document.getElementById('userName').value = user.name;
                 document.getElementById('userEmail').value = user.email;
+                document.getElementById('userPassword').value = user.password;
                 document.getElementById('userRole').value = user.role;
                 document.getElementById('userDepartment').value = user.department;
                 alert('User loaded for editing. Modify and click Add User to update.');
@@ -1740,9 +2444,134 @@
             }
         }
 
+        // Event Listeners
+        document.getElementById('loginForm').addEventListener('submit', login);
+
+        // Initialize system on page load
         window.onload = function() {
-            loadData();
+            initializeSystem();
+            checkExistingSession();
         };
-    </script>
-</body>
-</html>
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function createOutcomeChart(data) {
+            const outcomes = {};
+            data.forEach(function(call) {
+                const reason = call.disconnect_reason || 'Unknown';
+                const normalizedReason = reason.toLowerCase();
+                
+                let category;
+                if (normalizedReason.includes('completed') || normalizedReason.includes('success') || 
+                    normalizedReason.includes('answered') || normalizedReason.includes('ended')) {
+                    category = 'Completed';
+                } else if (normalizedReason.includes('missed') || normalizedReason.includes('no answer') || 
+                           normalizedReason.includes('failed')) {
+                    category = 'No Answer/Failed';
+                } else if (normalizedReason.includes('busy')) {
+                    category = 'Busy';
+                } else if (normalizedReason.includes('voicemail')) {
+                    category = 'Voicemail';
+                } else {
+                    category = reason;
+                }
+                
+                outcomes[category] = (outcomes[category] || 0) + 1;
+            });
+
+            const ctx = document.getElementById('outcomeChart').getContext('2d');
+            if (charts.outcome) charts.outcome.destroy();
+            
+            charts.outcome = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(outcomes),
+                    datasets: [{
+                        data: Object.values(outcomes),
+                        backgroundColor: [
+                            '#C00000',
+                            '#182B49',
+                            '#74D444',
+                            '#FFC000',
+                            '#FF3131'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        function createTrendsChart(data) {
+            const dailyData = {};
+            data.forEach(function(call) {
+                if (call.start_time) {
+                    const date = new Date(call.start_time).toDateString();
+                    if (!dailyData[date]) {
+                        dailyData[date] = { calls: 0, duration: 0, successful: 0 };
+                    }
+                    dailyData[date].calls++;
+                    dailyData[date].duration += parseDuration(call.duration);
+                    
+                    if (call.disconnect_reason) {
+                        const reason = call.disconnect_reason.toLowerCase();
+                        if (!reason.includes('missed') && !reason.includes('no answer') && 
+                            !reason.includes('busy') && !reason.includes('failed')) {
+                            dailyData[date].successful++;
+                        }
+                    }
+                }
+            });
+
+            const sortedDates = Object.keys(dailyData).sort(function(a, b) {
+                return new Date(a) - new Date(b);
+            });
+            
+            const ctx = document.getElementById('trendsChart').getContext('2d');
+            if (charts.trends) charts.trends.destroy();
+            
+            charts.trends = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: sortedDates.map(function(date) {
+                        return new Date(date).toLocaleDateString();
+                    }),
+                    datasets: [{
+                        label: 'Total Calls',
+                        data: sortedDates.map(function(date) {
+                            return dailyData[date].calls;
+                        }),
+                        borderColor: '#C00000',
+                        backgroundColor: 'rgba(192, 0, 0, 0.1)',
+                        tension: 0.4
+                    }, {
+                        label: 'Successful Calls',
+                        data: sortedDates.map(function(date) {
+                            return dailyData[date].successful;
+                        }),
+                        borderColor: '#182B49',
+                        backgroundColor: 'rgba(24, 43, 73, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: {
