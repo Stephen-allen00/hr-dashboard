@@ -1083,7 +1083,160 @@
             });
         }
 
-        function testConnection() {
+        function updateTable(data) {
+            const tbody = document.getElementById('callsTableBody');
+            tbody.innerHTML = '';
+            
+            const recentCalls = data.slice(-10).reverse();
+            
+            recentCalls.forEach(call => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${call['Call ID'] || call.id}</td>
+                    <td>${call.phone_number_dialed}</td>
+                    <td>${call['Employee Name']}</td>
+                    <td>${new Date(call.start_time).toLocaleString()}</td>
+                    <td>${call.duration}</td>
+                    <td><span style="color: ${call.disconnect_reason.includes('completed') ? '#28a745' : '#dc3545'}">${call.disconnect_reason}</span></td>
+                    <td><span style="color: ${call.caller_sentiment === 'positive' ? '#28a745' : call.caller_sentiment === 'negative' ? '#dc3545' : '#6c757d'}">${call.caller_sentiment}</span></td>
+                    <td>${call.benefit_counselor}</td>
+                    <td>${call.call_cost}</td>
+                    <td title="${call.call_summary}">${call.call_summary.substring(0, 50)}...</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function showMessage(message, type) {
+            const messageDiv = document.getElementById('loginMessage');
+            messageDiv.innerHTML = `<div class="message ${type}">${message}</div>`;
+            setTimeout(() => {
+                messageDiv.innerHTML = '';
+            }, 3000);
+        }
+
+        function doLogin() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            
+            console.log('Login attempt:', email, password);
+            
+            if (!email || !password) {
+                showMessage('Please enter both email and password', 'error');
+                return;
+            }
+            
+            const user = users[email.toLowerCase()];
+            
+            if (user && user.password === password) {
+                currentUser = { email, ...user };
+                console.log('Login successful:', currentUser);
+                showDashboard();
+                showMessage('Login successful!', 'success');
+            } else {
+                console.log('Login failed for:', email);
+                showMessage('Invalid email or password', 'error');
+            }
+        }
+
+        function quickLogin() {
+            document.getElementById('loginEmail').value = 'admin@company.com';
+            document.getElementById('loginPassword').value = 'admin123';
+            doLogin();
+        }
+
+        function showDashboard() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('dashboardPage').style.display = 'block';
+            
+            // Update user interface
+            document.getElementById('currentUserName').textContent = currentUser.name;
+            document.getElementById('currentUserRole').textContent = currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1);
+            document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
+            document.getElementById('roleDisplay').textContent = currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1);
+            document.getElementById('welcomeUserName').textContent = currentUser.name;
+            
+            // Update detailed user info
+            document.getElementById('userFullName').textContent = currentUser.name;
+            document.getElementById('userEmail').textContent = currentUser.email;
+            document.getElementById('userRoleDetail').textContent = currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1);
+            document.getElementById('userDepartment').textContent = currentUser.department;
+            
+            // Update permissions
+            updatePermissions();
+        }
+
+        function updatePermissions() {
+            const permissionsList = document.getElementById('permissionsList');
+            const detailedPermissionsList = document.getElementById('detailedPermissionsList');
+            const permissions = {
+                'admin': [
+                    'View all dashboard data',
+                    'Access admin panel',
+                    'Manage users and databases',
+                    'Modify system settings',
+                    'Export data'
+                ],
+                'manager': [
+                    'View all dashboard data',
+                    'Modify system settings',
+                    'Export data',
+                    { text: 'Access admin panel', restricted: true },
+                    { text: 'Manage users', restricted: true }
+                ],
+                'analyst': [
+                    'View all dashboard data',
+                    'Export data',
+                    { text: 'Access admin panel', restricted: true },
+                    { text: 'Modify system settings', restricted: true },
+                    { text: 'Manage users', restricted: true }
+                ],
+                'viewer': [
+                    'View dashboard data (read-only)',
+                    { text: 'Export data', restricted: true },
+                    { text: 'Access admin panel', restricted: true },
+                    { text: 'Modify system settings', restricted: true },
+                    { text: 'Manage users', restricted: true }
+                ]
+            };
+            
+            const userPermissions = permissions[currentUser.role] || [];
+            
+            // Update both permission lists
+            [permissionsList, detailedPermissionsList].forEach(list => {
+                if (list) {
+                    list.innerHTML = '';
+                    userPermissions.forEach(perm => {
+                        const li = document.createElement('li');
+                        if (typeof perm === 'string') {
+                            li.textContent = perm;
+                        } else {
+                            li.textContent = perm.text;
+                            if (perm.restricted) {
+                                li.classList.add('restricted');
+                            }
+                        }
+                        list.appendChild(li);
+                    });
+                }
+            });
+        }
+
+        function doLogout() {
+            currentUser = null;
+            document.getElementById('dashboardPage').style.display = 'none';
+            document.getElementById('loginPage').style.display = 'block';
+            
+            // Clear form
+            document.getElementById('loginEmail').value = '';
+            document.getElementById('loginPassword').value = '';
+            
+            showMessage('You have been logged out successfully', 'success');
+        }
+
+        // Initialize
+        console.log('Available users:', Object.keys(users));
+        console.log('System ready!');
             const baserowUrl = document.getElementById('baserowUrl').value.trim();
             const apiToken = document.getElementById('apiToken').value.trim();
             
