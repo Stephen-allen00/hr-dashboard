@@ -599,8 +599,9 @@
                     </select>
                 </div>
                 <div class="control-group">
-                    <button class="btn" onclick="loadAnalyticsData()">Load Dashboard</button>
+                    <button class="btn" onclick="loadAnalyticsData()">Load Live Data</button>
                     <button class="btn" style="background: #28a745;" onclick="loadSampleData()">Load Sample Data</button>
+                    <button class="btn" style="background: #17a2b8;" onclick="testConnection()">Test Connection</button>
                 </div>
             </div>
 
@@ -782,17 +783,73 @@
         }
 
         function loadAnalyticsData() {
-            const baserowUrl = document.getElementById('baserowUrl').value;
-            const apiToken = document.getElementById('apiToken').value;
+            const baserowUrl = document.getElementById('baserowUrl').value.trim();
+            const apiToken = document.getElementById('apiToken').value.trim();
             
             if (!baserowUrl || !apiToken) {
                 alert('Please provide both Baserow URL and API token, or use "Load Sample Data" button.');
                 return;
             }
             
-            // Here you would make the actual API call
-            // For now, just load sample data
-            loadSampleData();
+            document.getElementById('connectionStatus').innerHTML = 'Connecting to Baserow...';
+            
+            // Make actual API call to Baserow
+            fetch(baserowUrl, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Token ' + apiToken,
+                    'Content-Type': 'application/json'
+                },
+                mode: 'cors'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Baserow API Response:', data);
+                
+                // Extract results from Baserow response
+                callData = data.results || data;
+                
+                if (!Array.isArray(callData) || callData.length === 0) {
+                    throw new Error('No data returned from Baserow API');
+                }
+                
+                updateAnalyticsDashboard(callData);
+                updateStats(callData);
+                
+                document.getElementById('connectionStatus').innerHTML = 
+                    `<span style="color: #28a745;">✅ Connected to live Baserow data (${callData.length} records)</span>`;
+                
+                console.log('Successfully loaded', callData.length, 'records from Baserow');
+            })
+            .catch(error => {
+                console.error('Baserow connection error:', error);
+                
+                let errorMessage = 'Connection failed: ';
+                if (error.message.includes('cors') || error.message.includes('CORS')) {
+                    errorMessage += 'CORS policy blocked the request. ';
+                } else if (error.message.includes('401')) {
+                    errorMessage += 'Invalid API token. ';
+                } else if (error.message.includes('404')) {
+                    errorMessage += 'Invalid API URL. ';
+                } else if (error.message.includes('403')) {
+                    errorMessage += 'Access forbidden - check permissions. ';
+                } else {
+                    errorMessage += error.message + '. ';
+                }
+                errorMessage += 'Loading sample data instead.';
+                
+                document.getElementById('connectionStatus').innerHTML = 
+                    `<span style="color: #dc3545;">❌ ${errorMessage}</span>`;
+                
+                // Fallback to sample data
+                alert(`Baserow Connection Error: ${error.message}\n\nFalling back to sample data for demonstration.`);
+                loadSampleData();
+            });
         }
 
         function updateStats(data) {
@@ -1026,7 +1083,57 @@
             });
         }
 
-        function updateTable(data) {
+        function testConnection() {
+            const baserowUrl = document.getElementById('baserowUrl').value.trim();
+            const apiToken = document.getElementById('apiToken').value.trim();
+            
+            if (!baserowUrl || !apiToken) {
+                alert('Please enter both Baserow URL and API token first.');
+                return;
+            }
+            
+            document.getElementById('connectionStatus').innerHTML = 'Testing connection...';
+            
+            fetch(baserowUrl, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Token ' + apiToken,
+                    'Content-Type': 'application/json'
+                },
+                mode: 'cors'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const recordCount = data.results ? data.results.length : (Array.isArray(data) ? data.length : 0);
+                document.getElementById('connectionStatus').innerHTML = 
+                    `<span style="color: #28a745;">✅ Connection successful! Found ${recordCount} records</span>`;
+                
+                console.log('Test connection successful:', data);
+                alert(`✅ Connection Test Successful!\n\nFound ${recordCount} records in your Baserow table.\nYou can now click "Load Live Data" to import this data.`);
+            })
+            .catch(error => {
+                console.error('Connection test failed:', error);
+                
+                let helpText = '';
+                if (error.message.includes('CORS')) {
+                    helpText = '\n\nCORS Help:\n- Make sure your Baserow instance allows cross-origin requests\n- Consider using Baserow Cloud or configure CORS headers';
+                } else if (error.message.includes('401')) {
+                    helpText = '\n\nAuthentication Help:\n- Check your API token is correct\n- Make sure the token has read permissions for this table';
+                } else if (error.message.includes('404')) {
+                    helpText = '\n\nURL Help:\n- Verify your table ID in the URL\n- Ensure the API endpoint format is correct';
+                }
+                
+                document.getElementById('connectionStatus').innerHTML = 
+                    `<span style="color: #dc3545;">❌ Connection failed: ${error.message}</span>`;
+                
+                alert(`❌ Connection Test Failed\n\nError: ${error.message}${helpText}`);
+            });
+        }
             const tbody = document.getElementById('callsTableBody');
             tbody.innerHTML = '';
             
