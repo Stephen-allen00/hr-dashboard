@@ -19,7 +19,6 @@
             color: #333;
         }
 
-        /* Login Page Styles */
         .login-container {
             display: flex;
             align-items: center;
@@ -139,6 +138,7 @@
             max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
+            padding-left: 200px;
         }
 
         .user-menu {
@@ -201,7 +201,6 @@
             border-radius: 15px;
             padding: 30px;
             margin-bottom: 30px;
-            margin-left: 200px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
@@ -228,7 +227,6 @@
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
-            margin-left: 200px;
         }
 
         .stat-card {
@@ -256,21 +254,6 @@
             color: #666;
             font-size: 1rem;
             font-weight: 500;
-        }
-
-        .welcome-section {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            margin-left: 200px;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .dashboard-content {
-            margin-left: 200px;
         }
 
         .controls {
@@ -303,11 +286,6 @@
             transition: border-color 0.3s;
         }
 
-        .control-group input:focus, .control-group select:focus {
-            outline: none;
-            border-color: #C00000;
-        }
-
         .btn {
             background: linear-gradient(45deg, #C00000, #182B49);
             color: white;
@@ -325,117 +303,14 @@
             box-shadow: 0 6px 20px rgba(192, 0, 0, 0.4);
         }
 
-        .charts-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 25px;
+        .welcome-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
             margin-bottom: 30px;
-        }
-
-        .chart-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-
-        .chart-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #231F20;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .chart-wrapper {
-            position: relative;
-            height: 300px;
-        }
-
-        .large-chart {
-            grid-column: 1 / -1;
-        }
-
-        .large-chart .chart-wrapper {
-            height: 400px;
-        }
-
-        .data-table {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            overflow-x: auto;
-        }
-
-        .data-table table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 1200px;
-        }
-
-        .data-table th {
-            background: linear-gradient(45deg, #C00000, #182B49);
-            color: white;
-            padding: 15px 8px;
-            text-align: left;
-            font-weight: 600;
-            font-size: 13px;
-            white-space: nowrap;
-        }
-
-        .data-table td {
-            padding: 12px 8px;
-            border-bottom: 1px solid #eee;
-            font-size: 13px;
-            max-width: 150px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .data-table tr:hover {
-            background-color: #f8f9fa;
-        }
-
-        .status-bar {
-            text-align: center;
-            margin-bottom: 20px;
-            padding: 10px;
-            background: rgba(255,255,255,0.9);
-            border-radius: 10px;
-        }
-
-        .nav-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            justify-content: center;
-        }
-
-        .nav-tab {
-            background: rgba(255, 255, 255, 0.9);
-            border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .nav-tab.active {
-            background: linear-gradient(45deg, #C00000, #182B49);
-            color: white;
-        }
-
-        .tab-panel {
-            display: none;
-        }
-
-        .tab-panel.active {
-            display: block;
         }
 
         .role-permissions {
@@ -462,18 +337,17 @@
             font-weight: bold;
         }
 
-        .restricted {
-            color: #dc3545;
-        }
-
-        .restricted:before {
-            content: "✗ ";
-            color: #dc3545;
+        .status-bar {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 10px;
         }
 
         @media (max-width: 768px) {
-            .header, .stats-grid, .welcome-section {
-                margin-left: 20px;
+            .dashboard-container {
+                padding-left: 20px;
             }
         }
     </style>
@@ -498,11 +372,11 @@
                 <input type="password" id="loginPassword" value="admin123">
             </div>
             
-            <button class="login-btn" onclick="doLogin()">
+            <button class="login-btn" id="normalLogin">
                 Sign In
             </button>
             
-            <button class="login-btn quick-login" onclick="quickLogin()">
+            <button class="login-btn quick-login" id="quickLogin">
                 Quick Admin Login
             </button>
             
@@ -525,7 +399,7 @@
                 <div class="user-name" id="currentUserName">Admin User</div>
                 <div class="user-role" id="currentUserRole">Administrator</div>
             </div>
-            <button class="logout-btn" onclick="doLogout()">Logout</button>
+            <button class="logout-btn" id="logoutBtn">Logout</button>
         </div>
 
         <div class="header">
@@ -552,19 +426,40 @@
             </div>
         </div>
 
+        <div class="controls">
+            <div class="control-group">
+                <label for="baserowUrl">Baserow API URL:</label>
+                <input type="text" id="baserowUrl" placeholder="https://baserow.thehrsolutionsteam.com/api/database/tables/123/rows/" />
+            </div>
+            <div class="control-group">
+                <label for="apiToken">API Token:</label>
+                <input type="password" id="apiToken" placeholder="Your Baserow API token" />
+            </div>
+            <div class="control-group">
+                <label for="dateRange">Date Range:</label>
+                <select id="dateRange">
+                    <option value="7">Last 7 days</option>
+                    <option value="30">Last 30 days</option>
+                    <option value="90">Last 90 days</option>
+                    <option value="365">Last year</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <button class="btn" id="loadDataBtn">Load Live Data</button>
+                <button class="btn" style="background: #28a745;" id="loadSampleBtn">Load Sample Data</button>
+                <button class="btn" style="background: #17a2b8;" id="testConnBtn">Test Connection</button>
+            </div>
+        </div>
+
+        <div class="status-bar">
+            <div id="connectionStatus">Ready to connect - Enter your Baserow credentials above</div>
+            <div id="lastRefresh"></div>
+        </div>
+
         <div class="welcome-section">
             <h2>Welcome to Your Dashboard!</h2>
             <p>You are successfully logged in as <strong id="welcomeUserName">Administrator</strong></p>
             
-            <div class="nav-tabs">
-                <button class="nav-tab active" onclick="showTab('overview')">Overview</button>
-                <button class="nav-tab" onclick="showTab('analytics')">Call Analytics</button>
-                <button class="nav-tab" onclick="showTab('permissions')">Your Permissions</button>
-            </div>
-        </div>
-
-        <!-- Overview Tab -->
-        <div id="overviewTab" class="tab-panel active dashboard-content">
             <div class="role-permissions">
                 <h3>Your Role: <span id="roleDisplay">Administrator</span></h3>
                 <p><strong>Your Permissions:</strong></p>
@@ -577,122 +472,6 @@
                 </ul>
             </div>
         </div>
-
-        <!-- Analytics Tab -->
-        <div id="analyticsTab" class="tab-panel dashboard-content">
-            <div class="controls">
-                <div class="control-group">
-                    <label for="baserowUrl">Baserow API URL:</label>
-                    <input type="text" id="baserowUrl" placeholder="https://baserow.thehrsolutionsteam.com/api/database/tables/123/rows/" />
-                </div>
-                <div class="control-group">
-                    <label for="apiToken">API Token:</label>
-                    <input type="password" id="apiToken" placeholder="Your Baserow API token" />
-                </div>
-                <div class="control-group">
-                    <label for="dateRange">Date Range:</label>
-                    <select id="dateRange">
-                        <option value="7">Last 7 days</option>
-                        <option value="30">Last 30 days</option>
-                        <option value="90">Last 90 days</option>
-                        <option value="365">Last year</option>
-                    </select>
-                </div>
-                <div class="control-group">
-                    <button class="btn" onclick="loadAnalyticsData()">Load Live Data</button>
-                    <button class="btn" style="background: #28a745;" onclick="loadSampleData()">Load Sample Data</button>
-                    <button class="btn" style="background: #17a2b8;" onclick="testConnection()">Test Connection</button>
-                </div>
-            </div>
-
-            <div class="status-bar">
-                <div id="connectionStatus">Ready to connect - Click "Load Sample Data" to see charts and analytics</div>
-                <div id="lastRefresh"></div>
-            </div>
-
-            <div id="analyticsContent" style="display: none;">
-                <div class="charts-grid">
-                    <div class="chart-container">
-                        <div class="chart-title">Call Volume by Hour</div>
-                        <div class="chart-wrapper">
-                            <canvas id="hourlyChart"></canvas>
-                        </div>
-                    </div>
-                    
-                    <div class="chart-container">
-                        <div class="chart-title">Call Outcomes</div>
-                        <div class="chart-wrapper">
-                            <canvas id="outcomeChart"></canvas>
-                        </div>
-                    </div>
-                    
-                    <div class="chart-container large-chart">
-                        <div class="chart-title">Daily Call Trends</div>
-                        <div class="chart-wrapper">
-                            <canvas id="trendsChart"></canvas>
-                        </div>
-                    </div>
-                    
-                    <div class="chart-container">
-                        <div class="chart-title">Duration Distribution</div>
-                        <div class="chart-wrapper">
-                            <canvas id="durationChart"></canvas>
-                        </div>
-                    </div>
-                    
-                    <div class="chart-container">
-                        <div class="chart-title">Caller Sentiment Analysis</div>
-                        <div class="chart-wrapper">
-                            <canvas id="qualityChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="data-table">
-                    <div class="chart-title">Recent Call Details</div>
-                    <table id="callsTable">
-                        <thead>
-                            <tr>
-                                <th>Call ID</th>
-                                <th>Phone Number</th>
-                                <th>Employee</th>
-                                <th>Date/Time</th>
-                                <th>Duration</th>
-                                <th>Outcome</th>
-                                <th>Sentiment</th>
-                                <th>Counselor</th>
-                                <th>Cost</th>
-                                <th>Summary</th>
-                            </tr>
-                        </thead>
-                        <tbody id="callsTableBody">
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- Permissions Tab -->
-        <div id="permissionsTab" class="tab-panel dashboard-content">
-            <div class="welcome-section" style="margin-left: 0;">
-                <h3>Your Account Details</h3>
-                <p><strong>Name:</strong> <span id="userFullName">System Administrator</span></p>
-                <p><strong>Email:</strong> <span id="userEmail">admin@company.com</span></p>
-                <p><strong>Role:</strong> <span id="userRoleDetail">Administrator</span></p>
-                <p><strong>Department:</strong> <span id="userDepartment">IT</span></p>
-                
-                <div class="role-permissions">
-                    <h4>Detailed Permissions:</h4>
-                    <ul class="permission-list" id="detailedPermissionsList">
-                        <li>View all dashboard data</li>
-                        <li>Access admin panel</li>
-                        <li>Manage users and databases</li>
-                        <li>Modify system settings</li>
-                        <li>Export data</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
     </div>
 
     <script>
@@ -702,411 +481,31 @@
                 password: 'admin123',
                 name: 'System Administrator',
                 role: 'admin',
-                department: 'IT',
-                permissions: ['view', 'admin', 'users', 'settings', 'export']
+                department: 'IT'
             },
             'manager@company.com': {
                 password: 'manager123',
                 name: 'John Manager',
                 role: 'manager',
-                department: 'HR',
-                permissions: ['view', 'settings', 'export']
+                department: 'HR'
             },
             'analyst@company.com': {
                 password: 'analyst123',
                 name: 'Jane Analyst',
                 role: 'analyst',
-                department: 'Operations',
-                permissions: ['view', 'export']
+                department: 'Operations'
             },
             'viewer@company.com': {
                 password: 'viewer123',
                 name: 'Bob Viewer',
                 role: 'viewer',
-                department: 'HR',
-                permissions: ['view']
+                department: 'HR'
             }
         };
 
         let currentUser = null;
-        let charts = {};
-        let callData = [];
 
-        // Generate sample data for analytics
-        function generateSampleData() {
-            const data = [];
-            const disconnectReasons = ['completed', 'missed call', 'no answer', 'busy', 'voicemail'];
-            const sentiments = ['positive', 'neutral', 'negative'];
-            const employees = ['Sarah Johnson', 'Mike Chen', 'Lisa Rodriguez'];
-            
-            for (let i = 0; i < 100; i++) {
-                const date = new Date();
-                date.setDate(date.getDate() - Math.floor(Math.random() * 30));
-                
-                data.push({
-                    id: i + 1,
-                    'Call ID': 'CALL-' + (1000 + i),
-                    phone_number_dialed: '555-' + (Math.floor(Math.random() * 900) + 100) + '-' + (Math.floor(Math.random() * 9000) + 1000),
-                    'Employee Name': employees[Math.floor(Math.random() * employees.length)],
-                    start_time: date.toISOString(),
-                    duration: Math.floor(Math.random() * 20) + ':' + Math.floor(Math.random() * 60).toString().padStart(2, '0'),
-                    disconnect_reason: disconnectReasons[Math.floor(Math.random() * disconnectReasons.length)],
-                    call_summary: 'Sample call summary with key discussion points and outcomes.',
-                    caller_sentiment: sentiments[Math.floor(Math.random() * sentiments.length)],
-                    benefit_counselor: 'AI Assistant',
-                    call_cost: (Math.random() * 2 + 0.5).toFixed(2)
-                });
-            }
-            return data;
-        }
-
-        function showTab(tabName) {
-            // Hide all tabs
-            document.querySelectorAll('.tab-panel').forEach(panel => {
-                panel.classList.remove('active');
-            });
-            document.querySelectorAll('.nav-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Show selected tab
-            document.getElementById(tabName + 'Tab').classList.add('active');
-            event.target.classList.add('active');
-        }
-
-        function loadSampleData() {
-            callData = generateSampleData();
-            updateAnalyticsDashboard(callData);
-            document.getElementById('connectionStatus').innerHTML = 
-                '<span style="color: #28a745;">✅ Sample data loaded successfully</span>';
-            updateStats(callData);
-        }
-
-        function loadAnalyticsData() {
-            const baserowUrl = document.getElementById('baserowUrl').value.trim();
-            const apiToken = document.getElementById('apiToken').value.trim();
-            
-            if (!baserowUrl || !apiToken) {
-                alert('Please provide both Baserow URL and API token, or use "Load Sample Data" button.');
-                return;
-            }
-            
-            document.getElementById('connectionStatus').innerHTML = 'Connecting to Baserow...';
-            
-            // Make actual API call to Baserow
-            fetch(baserowUrl, {
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Token ' + apiToken,
-                    'Content-Type': 'application/json'
-                },
-                mode: 'cors'
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Baserow API Response:', data);
-                
-                // Extract results from Baserow response
-                callData = data.results || data;
-                
-                if (!Array.isArray(callData) || callData.length === 0) {
-                    throw new Error('No data returned from Baserow API');
-                }
-                
-                updateAnalyticsDashboard(callData);
-                updateStats(callData);
-                
-                document.getElementById('connectionStatus').innerHTML = 
-                    `<span style="color: #28a745;">✅ Connected to live Baserow data (${callData.length} records)</span>`;
-                
-                console.log('Successfully loaded', callData.length, 'records from Baserow');
-            })
-            .catch(error => {
-                console.error('Baserow connection error:', error);
-                
-                let errorMessage = 'Connection failed: ';
-                if (error.message.includes('cors') || error.message.includes('CORS')) {
-                    errorMessage += 'CORS policy blocked the request. ';
-                } else if (error.message.includes('401')) {
-                    errorMessage += 'Invalid API token. ';
-                } else if (error.message.includes('404')) {
-                    errorMessage += 'Invalid API URL. ';
-                } else if (error.message.includes('403')) {
-                    errorMessage += 'Access forbidden - check permissions. ';
-                } else {
-                    errorMessage += error.message + '. ';
-                }
-                errorMessage += 'Loading sample data instead.';
-                
-                document.getElementById('connectionStatus').innerHTML = 
-                    `<span style="color: #dc3545;">❌ ${errorMessage}</span>`;
-                
-                // Fallback to sample data
-                alert(`Baserow Connection Error: ${error.message}\n\nFalling back to sample data for demonstration.`);
-                loadSampleData();
-            });
-        }
-
-        function updateStats(data) {
-            const totalCalls = data.length;
-            const totalDuration = data.reduce((sum, call) => {
-                return sum + parseDuration(call.duration);
-            }, 0);
-            const avgDuration = totalCalls > 0 ? totalDuration / totalCalls : 0;
-            const successfulCalls = data.filter(call => {
-                if (!call.disconnect_reason) return false;
-                const reason = call.disconnect_reason.toLowerCase();
-                return !reason.includes('missed') && 
-                       !reason.includes('no answer') &&
-                       !reason.includes('busy') &&
-                       !reason.includes('failed');
-            }).length;
-            const successRate = totalCalls > 0 ? (successfulCalls / totalCalls) * 100 : 0;
-
-            document.getElementById('totalCalls').textContent = totalCalls.toLocaleString();
-            document.getElementById('avgDuration').textContent = formatDuration(Math.round(avgDuration));
-            document.getElementById('successRate').textContent = successRate.toFixed(1) + '%';
-            document.getElementById('totalMinutes').textContent = Math.round(totalDuration / 60).toLocaleString();
-        }
-
-        function parseDuration(durationValue) {
-            if (!durationValue) return 0;
-            if (typeof durationValue === 'number') return durationValue;
-            
-            const str = durationValue.toString().trim();
-            if (str.includes(':')) {
-                const parts = str.split(':');
-                if (parts.length === 2) {
-                    const minutes = parseInt(parts[0]) || 0;
-                    const seconds = parseInt(parts[1]) || 0;
-                    return (minutes * 60) + seconds;
-                }
-            }
-            return 0;
-        }
-
-        function formatDuration(seconds) {
-            if (!seconds || isNaN(seconds)) return '0:00';
-            const minutes = Math.floor(seconds / 60);
-            const remainingSeconds = seconds % 60;
-            return minutes + ':' + remainingSeconds.toString().padStart(2, '0');
-        }
-
-        function updateAnalyticsDashboard(data) {
-            document.getElementById('analyticsContent').style.display = 'block';
-            createHourlyChart(data);
-            createOutcomeChart(data);
-            createTrendsChart(data);
-            createDurationChart(data);
-            createQualityChart(data);
-            updateTable(data);
-        }
-
-        function createHourlyChart(data) {
-            const hourlyData = new Array(24).fill(0);
-            data.forEach(call => {
-                if (call.start_time) {
-                    const hour = new Date(call.start_time).getHours();
-                    if (!isNaN(hour)) hourlyData[hour]++;
-                }
-            });
-
-            const ctx = document.getElementById('hourlyChart').getContext('2d');
-            if (charts.hourly) charts.hourly.destroy();
-            
-            charts.hourly = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: Array.from({length: 24}, (_, i) => i + ':00'),
-                    datasets: [{
-                        label: 'Calls per Hour',
-                        data: hourlyData,
-                        backgroundColor: '#C00000',
-                        borderColor: '#C00000',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true } }
-                }
-            });
-        }
-
-        function createOutcomeChart(data) {
-            const outcomes = {};
-            data.forEach(call => {
-                const reason = call.disconnect_reason || 'Unknown';
-                outcomes[reason] = (outcomes[reason] || 0) + 1;
-            });
-
-            const ctx = document.getElementById('outcomeChart').getContext('2d');
-            if (charts.outcome) charts.outcome.destroy();
-            
-            charts.outcome = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: Object.keys(outcomes),
-                    datasets: [{
-                        data: Object.values(outcomes),
-                        backgroundColor: ['#C00000', '#182B49', '#74D444', '#FFC000', '#FF3131']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom' } }
-                }
-            });
-        }
-
-        function createTrendsChart(data) {
-            const dailyData = {};
-            data.forEach(call => {
-                if (call.start_time) {
-                    const date = new Date(call.start_time).toDateString();
-                    if (!dailyData[date]) {
-                        dailyData[date] = { calls: 0, successful: 0 };
-                    }
-                    dailyData[date].calls++;
-                    if (call.disconnect_reason && call.disconnect_reason.toLowerCase().includes('completed')) {
-                        dailyData[date].successful++;
-                    }
-                }
-            });
-
-            const sortedDates = Object.keys(dailyData).sort((a, b) => new Date(a) - new Date(b));
-            
-            const ctx = document.getElementById('trendsChart').getContext('2d');
-            if (charts.trends) charts.trends.destroy();
-            
-            charts.trends = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: sortedDates.map(date => new Date(date).toLocaleDateString()),
-                    datasets: [{
-                        label: 'Total Calls',
-                        data: sortedDates.map(date => dailyData[date].calls),
-                        borderColor: '#C00000',
-                        backgroundColor: 'rgba(192, 0, 0, 0.1)',
-                        tension: 0.4
-                    }, {
-                        label: 'Successful Calls',
-                        data: sortedDates.map(date => dailyData[date].successful),
-                        borderColor: '#182B49',
-                        backgroundColor: 'rgba(24, 43, 73, 0.1)',
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: { y: { beginAtZero: true } }
-                }
-            });
-        }
-
-        function createDurationChart(data) {
-            const durations = { '0-1min': 0, '1-3min': 0, '3-5min': 0, '5-10min': 0, '10min+': 0 };
-            
-            data.forEach(call => {
-                const durationSeconds = parseDuration(call.duration);
-                const minutes = durationSeconds / 60;
-                if (minutes <= 1) durations['0-1min']++;
-                else if (minutes <= 3) durations['1-3min']++;
-                else if (minutes <= 5) durations['3-5min']++;
-                else if (minutes <= 10) durations['5-10min']++;
-                else durations['10min+']++;
-            });
-
-            const ctx = document.getElementById('durationChart').getContext('2d');
-            if (charts.duration) charts.duration.destroy();
-            
-            charts.duration = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: Object.keys(durations),
-                    datasets: [{
-                        label: 'Number of Calls',
-                        data: Object.values(durations),
-                        backgroundColor: '#182B49',
-                        borderColor: '#182B49',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true } }
-                }
-            });
-        }
-
-        function createQualityChart(data) {
-            const sentiments = { 'Positive': 0, 'Neutral': 0, 'Negative': 0 };
-            
-            data.forEach(call => {
-                const sentiment = call.caller_sentiment || 'neutral';
-                const key = sentiment.charAt(0).toUpperCase() + sentiment.slice(1);
-                if (sentiments[key] !== undefined) {
-                    sentiments[key]++;
-                }
-            });
-
-            const ctx = document.getElementById('qualityChart').getContext('2d');
-            if (charts.quality) charts.quality.destroy();
-            
-            charts.quality = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: Object.keys(sentiments),
-                    datasets: [{
-                        label: 'Caller Sentiment',
-                        data: Object.values(sentiments),
-                        backgroundColor: ['#74D444', '#FFC000', '#FF3131']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true } }
-                }
-            });
-        }
-
-        function updateTable(data) {
-            const tbody = document.getElementById('callsTableBody');
-            tbody.innerHTML = '';
-            
-            const recentCalls = data.slice(-10).reverse();
-            
-            recentCalls.forEach(call => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${call['Call ID'] || call.id}</td>
-                    <td>${call.phone_number_dialed}</td>
-                    <td>${call['Employee Name']}</td>
-                    <td>${new Date(call.start_time).toLocaleString()}</td>
-                    <td>${call.duration}</td>
-                    <td><span style="color: ${call.disconnect_reason.includes('completed') ? '#28a745' : '#dc3545'}">${call.disconnect_reason}</span></td>
-                    <td><span style="color: ${call.caller_sentiment === 'positive' ? '#28a745' : call.caller_sentiment === 'negative' ? '#dc3545' : '#6c757d'}">${call.caller_sentiment}</span></td>
-                    <td>${call.benefit_counselor}</td>
-                    <td>${call.call_cost}</td>
-                    <td title="${call.call_summary}">${call.call_summary.substring(0, 50)}...</td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-
+        // Show message function
         function showMessage(message, type) {
             const messageDiv = document.getElementById('loginMessage');
             messageDiv.innerHTML = `<div class="message ${type}">${message}</div>`;
@@ -1115,11 +514,14 @@
             }, 3000);
         }
 
+        // Main login function
         function doLogin() {
+            console.log('doLogin called');
+            
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
             
-            console.log('Login attempt:', email, password);
+            console.log('Attempting login with:', email, password);
             
             if (!email || !password) {
                 showMessage('Please enter both email and password', 'error');
@@ -1127,102 +529,42 @@
             }
             
             const user = users[email.toLowerCase()];
+            console.log('Found user:', user);
             
             if (user && user.password === password) {
                 currentUser = { email, ...user };
                 console.log('Login successful:', currentUser);
-                showDashboard();
+                
+                // Hide login page
+                document.getElementById('loginPage').style.display = 'none';
+                // Show dashboard
+                document.getElementById('dashboardPage').style.display = 'block';
+                
+                // Update UI
+                document.getElementById('currentUserName').textContent = currentUser.name;
+                document.getElementById('currentUserRole').textContent = currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1);
+                document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
+                document.getElementById('welcomeUserName').textContent = currentUser.name;
+                document.getElementById('roleDisplay').textContent = currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1);
+                
                 showMessage('Login successful!', 'success');
             } else {
-                console.log('Login failed for:', email);
+                console.log('Login failed');
                 showMessage('Invalid email or password', 'error');
             }
         }
 
+        // Quick login function
         function quickLogin() {
+            console.log('quickLogin called');
             document.getElementById('loginEmail').value = 'admin@company.com';
             document.getElementById('loginPassword').value = 'admin123';
             doLogin();
         }
 
-        function showDashboard() {
-            document.getElementById('loginPage').style.display = 'none';
-            document.getElementById('dashboardPage').style.display = 'block';
-            
-            // Update user interface
-            document.getElementById('currentUserName').textContent = currentUser.name;
-            document.getElementById('currentUserRole').textContent = currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1);
-            document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
-            document.getElementById('roleDisplay').textContent = currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1);
-            document.getElementById('welcomeUserName').textContent = currentUser.name;
-            
-            // Update detailed user info
-            document.getElementById('userFullName').textContent = currentUser.name;
-            document.getElementById('userEmail').textContent = currentUser.email;
-            document.getElementById('userRoleDetail').textContent = currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1);
-            document.getElementById('userDepartment').textContent = currentUser.department;
-            
-            // Update permissions
-            updatePermissions();
-        }
-
-        function updatePermissions() {
-            const permissionsList = document.getElementById('permissionsList');
-            const detailedPermissionsList = document.getElementById('detailedPermissionsList');
-            const permissions = {
-                'admin': [
-                    'View all dashboard data',
-                    'Access admin panel',
-                    'Manage users and databases',
-                    'Modify system settings',
-                    'Export data'
-                ],
-                'manager': [
-                    'View all dashboard data',
-                    'Modify system settings',
-                    'Export data',
-                    { text: 'Access admin panel', restricted: true },
-                    { text: 'Manage users', restricted: true }
-                ],
-                'analyst': [
-                    'View all dashboard data',
-                    'Export data',
-                    { text: 'Access admin panel', restricted: true },
-                    { text: 'Modify system settings', restricted: true },
-                    { text: 'Manage users', restricted: true }
-                ],
-                'viewer': [
-                    'View dashboard data (read-only)',
-                    { text: 'Export data', restricted: true },
-                    { text: 'Access admin panel', restricted: true },
-                    { text: 'Modify system settings', restricted: true },
-                    { text: 'Manage users', restricted: true }
-                ]
-            };
-            
-            const userPermissions = permissions[currentUser.role] || [];
-            
-            // Update both permission lists
-            [permissionsList, detailedPermissionsList].forEach(list => {
-                if (list) {
-                    list.innerHTML = '';
-                    userPermissions.forEach(perm => {
-                        const li = document.createElement('li');
-                        if (typeof perm === 'string') {
-                            li.textContent = perm;
-                        } else {
-                            li.textContent = perm.text;
-                            if (perm.restricted) {
-                                li.classList.add('restricted');
-                            }
-                        }
-                        list.appendChild(li);
-                    });
-                }
-            });
-        }
-
+        // Logout function
         function doLogout() {
+            console.log('doLogout called');
             currentUser = null;
             document.getElementById('dashboardPage').style.display = 'none';
             document.getElementById('loginPage').style.display = 'block';
@@ -1234,9 +576,8 @@
             showMessage('You have been logged out successfully', 'success');
         }
 
-        // Initialize
-        console.log('Available users:', Object.keys(users));
-        console.log('System ready!');
+        // Test connection function
+        function testConnection() {
             const baserowUrl = document.getElementById('baserowUrl').value.trim();
             const apiToken = document.getElementById('apiToken').value.trim();
             
@@ -1266,174 +607,31 @@
                 document.getElementById('connectionStatus').innerHTML = 
                     `<span style="color: #28a745;">✅ Connection successful! Found ${recordCount} records</span>`;
                 
-                console.log('Test connection successful:', data);
-                alert(`✅ Connection Test Successful!\n\nFound ${recordCount} records in your Baserow table.\nYou can now click "Load Live Data" to import this data.`);
+                alert(`✅ Connection Test Successful!\n\nFound ${recordCount} records in your Baserow table.`);
             })
             .catch(error => {
-                console.error('Connection test failed:', error);
-                
-                let helpText = '';
-                if (error.message.includes('CORS')) {
-                    helpText = '\n\nCORS Help:\n- Make sure your Baserow instance allows cross-origin requests\n- Consider using Baserow Cloud or configure CORS headers';
-                } else if (error.message.includes('401')) {
-                    helpText = '\n\nAuthentication Help:\n- Check your API token is correct\n- Make sure the token has read permissions for this table';
-                } else if (error.message.includes('404')) {
-                    helpText = '\n\nURL Help:\n- Verify your table ID in the URL\n- Ensure the API endpoint format is correct';
-                }
-                
                 document.getElementById('connectionStatus').innerHTML = 
                     `<span style="color: #dc3545;">❌ Connection failed: ${error.message}</span>`;
                 
-                alert(`❌ Connection Test Failed\n\nError: ${error.message}${helpText}`);
-            });
-        }
-            const tbody = document.getElementById('callsTableBody');
-            tbody.innerHTML = '';
-            
-            const recentCalls = data.slice(-10).reverse();
-            
-            recentCalls.forEach(call => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${call['Call ID'] || call.id}</td>
-                    <td>${call.phone_number_dialed}</td>
-                    <td>${call['Employee Name']}</td>
-                    <td>${new Date(call.start_time).toLocaleString()}</td>
-                    <td>${call.duration}</td>
-                    <td><span style="color: ${call.disconnect_reason.includes('completed') ? '#28a745' : '#dc3545'}">${call.disconnect_reason}</span></td>
-                    <td><span style="color: ${call.caller_sentiment === 'positive' ? '#28a745' : call.caller_sentiment === 'negative' ? '#dc3545' : '#6c757d'}">${call.caller_sentiment}</span></td>
-                    <td>${call.benefit_counselor}</td>
-                    <td>${call.call_cost}</td>
-                    <td title="${call.call_summary}">${call.call_summary.substring(0, 50)}...</td>
-                `;
-                tbody.appendChild(row);
+                alert(`❌ Connection Test Failed\n\nError: ${error.message}`);
             });
         }
 
-        function showMessage(message, type) {
-            const messageDiv = document.getElementById('loginMessage');
-            messageDiv.innerHTML = `<div class="message ${type}">${message}</div>`;
-            setTimeout(() => {
-                messageDiv.innerHTML = '';
-            }, 3000);
-        }
-
-        function doLogin() {
-            const email = document.getElementById('loginEmail').value.trim();
-            const password = document.getElementById('loginPassword').value;
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, setting up event listeners...');
             
-            console.log('Login attempt:', email, password);
+            // Login button event listeners
+            document.getElementById('normalLogin').addEventListener('click', doLogin);
+            document.getElementById('quickLogin').addEventListener('click', quickLogin);
+            document.getElementById('logoutBtn').addEventListener('click', doLogout);
             
-            if (!email || !password) {
-                showMessage('Please enter both email and password', 'error');
-                return;
-            }
+            // Dashboard button event listeners
+            document.getElementById('testConnBtn').addEventListener('click', testConnection);
             
-            const user = users[email.toLowerCase()];
-            
-            if (user && user.password === password) {
-                currentUser = { email, ...user };
-                console.log('Login successful:', currentUser);
-                showDashboard();
-                showMessage('Login successful!', 'success');
-            } else {
-                console.log('Login failed for:', email);
-                showMessage('Invalid email or password', 'error');
-            }
-        }
-
-        function quickLogin() {
-            document.getElementById('loginEmail').value = 'admin@company.com';
-            document.getElementById('loginPassword').value = 'admin123';
-            doLogin();
-        }
-
-        function showDashboard() {
-            document.getElementById('loginPage').style.display = 'none';
-            document.getElementById('dashboardPage').style.display = 'block';
-            
-            // Update user interface
-            document.getElementById('currentUserName').textContent = currentUser.name;
-            document.getElementById('currentUserRole').textContent = currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1);
-            document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
-            document.getElementById('roleDisplay').textContent = currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1);
-            document.getElementById('welcomeUserName').textContent = currentUser.name;
-            
-            // Update detailed user info
-            document.getElementById('userFullName').textContent = currentUser.name;
-            document.getElementById('userEmail').textContent = currentUser.email;
-            document.getElementById('userRoleDetail').textContent = currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1);
-            document.getElementById('userDepartment').textContent = currentUser.department;
-            
-            // Update permissions
-            updatePermissions();
-        }
-
-        function updatePermissions() {
-            const permissionsList = document.getElementById('permissionsList');
-            const permissions = {
-                'admin': [
-                    'View all dashboard data',
-                    'Access admin panel',
-                    'Manage users and databases',
-                    'Modify system settings',
-                    'Export data'
-                ],
-                'manager': [
-                    'View all dashboard data',
-                    'Modify system settings',
-                    'Export data',
-                    { text: 'Access admin panel', restricted: true },
-                    { text: 'Manage users', restricted: true }
-                ],
-                'analyst': [
-                    'View all dashboard data',
-                    'Export data',
-                    { text: 'Access admin panel', restricted: true },
-                    { text: 'Modify system settings', restricted: true },
-                    { text: 'Manage users', restricted: true }
-                ],
-                'viewer': [
-                    'View dashboard data (read-only)',
-                    { text: 'Export data', restricted: true },
-                    { text: 'Access admin panel', restricted: true },
-                    { text: 'Modify system settings', restricted: true },
-                    { text: 'Manage users', restricted: true }
-                ]
-            };
-            
-            const userPermissions = permissions[currentUser.role] || [];
-            permissionsList.innerHTML = '';
-            
-            userPermissions.forEach(perm => {
-                const li = document.createElement('li');
-                if (typeof perm === 'string') {
-                    li.textContent = perm;
-                } else {
-                    li.textContent = perm.text;
-                    if (perm.restricted) {
-                        li.classList.add('restricted');
-                    }
-                }
-                permissionsList.appendChild(li);
-            });
-        }
-
-        function doLogout() {
-            currentUser = null;
-            document.getElementById('dashboardPage').style.display = 'none';
-            document.getElementById('loginPage').style.display = 'block';
-            
-            // Clear form
-            document.getElementById('loginEmail').value = '';
-            document.getElementById('loginPassword').value = '';
-            
-            showMessage('You have been logged out successfully', 'success');
-        }
-
-        // Initialize
-        console.log('Available users:', Object.keys(users));
-        console.log('System ready!');
+            console.log('Available users:', Object.keys(users));
+            console.log('System ready!');
+        });
     </script>
 </body>
 </html>
